@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sarwad Hasan Siddiqui – CV</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:      #1B2A4A;
+    --blue:      #2055A8;
+    --blue-lt:   #EBF2FF;
+    --blue-bd:   #C7D8F5;
+    --text:      #1F2937;
+    --muted:     #6B7280;
+    --border:    #D1D5DB;
+    --side-bg:   #F3F6FB;
+    --gold:      #D97706;
+  }
+
+  html, body {
+    width: 210mm;
+    font-family: 'Inter', Arial, sans-serif;
+    font-size: 9pt;
+    color: var(--text);
+    background: #fff;
+    line-height: 1.45;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ══ HEADER ══ */
+  .header {
+    background: var(--navy);
+    color: #fff;
+    padding: 14px 22px 14px 22px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .header-photo {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    border: 3px solid rgba(255,255,255,0.32);
+    object-fit: cover;
+    object-position: top center;
+    flex-shrink: 0;
+  }
+  .header-text { flex: 1; }
+  .header-name {
+    font-family: 'Merriweather', Georgia, serif;
+    font-size: 23pt;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    line-height: 1.05;
+    color: #fff;
+  }
+  .header-title {
+    font-size: 8.8pt;
+    font-weight: 400;
+    color: rgba(255,255,255,0.75);
+    margin-top: 3px;
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+  }
+  .header-contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px 18px;
+    margin-top: 7px;
+  }
+  .header-contact span {
+    font-size: 8.2pt;
+    color: rgba(255,255,255,0.85);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .header-contact a { color: rgba(255,255,255,0.92); text-decoration: none; }
+  .header-contact a:hover { text-decoration: underline; }
+
+  /* ══ BODY COLUMNS ══ */
+  .body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .top-layout {
+    display: flex;
+    align-items: stretch;
+  }
+
+  /* ══ MAIN — left 63% ══ */
+  .main {
+    flex: 0 0 63%;
+    padding: 12px 15px 12px 22px;
+    border-right: 1px solid var(--border);
+  }
+
+  /* ══ SIDEBAR — right 37% ══ */
+  .sidebar {
+    flex: 0 0 37%;
+    padding: 12px 20px 12px 15px;
+    background: var(--side-bg);
+  }
+
+  .experience-section {
+    padding: 10px 22px 12px 22px;
+  }
+
+  .experience-section .section-title {
+    margin-top: 0;
+  }
+
+  .experience-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 18px;
+  }
+
+  .experience-grid .exp-item {
+    margin-bottom: 0;
+  }
+
+  /* ══ SECTION TITLES ══ */
+  .section-title {
+    font-size: 8pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--blue);
+    border-bottom: 1.8px solid var(--blue);
+    padding-bottom: 2px;
+    margin-bottom: 7px;
+    margin-top: 11px;
+  }
+  .section-title:first-child, .sidebar .section-title:first-child { margin-top: 0; }
+
+  /* ══ PROFILE ══ */
+  .profile-text {
+    font-size: 8.7pt;
+    color: var(--text);
+    line-height: 1.55;
+  }
+
+  /* ══ PROJECTS ══ */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 12px;
+  }
+  .project-item { padding: 4px 0; }
+  .project-header {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 1px;
+  }
+  .project-name {
+    font-weight: 600;
+    font-size: 8.8pt;
+    color: var(--navy);
+  }
+  .project-tech {
+    font-size: 7.6pt;
+    color: var(--blue);
+    font-weight: 500;
+  }
+  .project-link {
+    display: block;
+    font-size: 7.3pt;
+    color: var(--muted);
+    text-decoration: none;
+    margin-bottom: 2px;
+  }
+  .project-link:hover { color: var(--blue); text-decoration: underline; }
+  .project-desc {
+    font-size: 8.2pt;
+    color: var(--muted);
+    line-height: 1.42;
+  }
+  .project-features {
+    margin-top: 3px;
+    list-style: none;
+    padding: 0;
+  }
+  .project-features li {
+    font-size: 7.9pt;
+    color: var(--muted);
+    padding-left: 10px;
+    position: relative;
+    line-height: 1.38;
+  }
+  .project-features li::before {
+    content: "\25B8";
+    position: absolute;
+    left: 0;
+    color: var(--blue);
+    font-size: 7pt;
+    top: 1px;
+  }
+
+  /* ══ EXPERIENCE ══ */
+  .exp-item { margin-bottom: 7px; }
+  .exp-item:last-child { margin-bottom: 0; }
+  .exp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 2px;
+  }
+  .exp-role {
+    font-weight: 600;
+    font-size: 8.8pt;
+    color: var(--navy);
+  }
+  .exp-date {
+    font-size: 7.8pt;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .exp-org {
+    font-size: 8.2pt;
+    color: var(--blue);
+    font-weight: 500;
+    margin-top: 1px;
+  }
+  .exp-desc {
+    font-size: 8.2pt;
+    color: var(--muted);
+    margin-top: 2px;
+    line-height: 1.45;
+  }
+
+  /* ══ EDUCATION ══ */
+  .edu-item { margin-bottom: 8px; }
+  .edu-item:last-child { margin-bottom: 0; }
+  .edu-degree {
+    font-weight: 600;
+    font-size: 8.7pt;
+    color: var(--navy);
+    line-height: 1.3;
+  }
+  .edu-school {
+    font-size: 8.2pt;
+    color: var(--text);
+    margin-top: 1px;
+  }
+  .edu-meta {
+    font-size: 7.8pt;
+    color: var(--blue);
+    margin-top: 1px;
+    font-weight: 500;
+  }
+
+  /* ══ SKILLS TAGS ══ */
+  .skills-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 5px;
+  }
+  .skill-tag {
+    background: var(--blue-lt);
+    color: var(--navy);
+    font-size: 7.8pt;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 3px;
+    border: 0.8px solid var(--blue-bd);
+  }
+
+  /* ══ TOOLS ══ */
+  .tools-text {
+    font-size: 8.5pt;
+    color: var(--text);
+    line-height: 1.65;
+  }
+
+  /* ══ SOFT SKILLS ══ */
+  .soft-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 5px;
+  }
+  .soft-tag {
+    font-size: 8.2pt;
+    color: var(--text);
+    background: #fff;
+    border: 0.8px solid var(--border);
+    padding: 2px 7px;
+    border-radius: 3px;
+  }
+
+  /* ══ LANGUAGES ══ */
+  .lang-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 8.5pt;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+  .lang-level { color: var(--muted); font-size: 8pt; }
+
+  /* ══ ACHIEVEMENTS ══ */
+  .ach-list { list-style: none; padding: 0; }
+  .ach-list li {
+    font-size: 8.4pt;
+    color: var(--text);
+    padding-left: 13px;
+    position: relative;
+    margin-bottom: 4px;
+    line-height: 1.4;
+  }
+  .ach-list li::before {
+    content: "\2605";
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-size: 7.5pt;
+    top: 1px;
+  }
+
+  /* ══ PRINT ══ */
+  @media print {
+    html, body { width: 210mm; }
+    .page { min-height: 297mm; }
+    .header {
+      background: #fff;
+      color: #000;
+      border-bottom: 1px solid #000;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .header-name,
+    .header-title,
+    .header-contact span,
+    .header-contact a {
+      color: #000 !important;
+    }
+    .header-photo {
+      border-color: #000;
+    }
+    @page { size: A4; margin: 0; }
+  }
+</style>
+<style>
+  .pub-list { list-style: none; padding: 0; }
+  .pub-list li { font-size: 8.1pt; line-height: 1.4; margin-bottom: 4px; padding-left: 10px; position: relative; color: var(--text); }
+  .pub-list li::before { content: "\25B8"; position: absolute; left: 0; color: var(--blue); font-size: 7pt; top: 1px; }
+  .pub-status { font-size: 7pt; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; padding: 0 4px; border-radius: 2px; margin-left: 3px; white-space: nowrap; }
+  .st-pub { background: #DCFCE7; color: #166534; }
+  .st-rev { background: #FEF3C7; color: #92400E; }
+  .st-act { background: var(--blue-lt); color: var(--navy); }
+  .pub-venue { color: var(--muted); font-style: italic; }
+  .interests { font-size: 8.2pt; color: var(--text); line-height: 1.5; }
+  .interests b { color: var(--navy); font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<header class="header">
+  <img class="header-photo" src="Sarwad.jpg" alt="Sarwad Hasan Siddiqui">
+  <div class="header-text">
+    <div class="header-name">Sarwad Hasan Siddiqui</div>
+    <div class="header-title">CS Undergraduate Researcher &middot; GPU &amp; AI Systems &middot; Software Engineer</div>
+    <div class="header-contact">
+      <span>&#9993;&nbsp;<a href="mailto:sarwad015@gmail.com">sarwad015@gmail.com</a></span>
+      <span>&#128222;&nbsp;01869965299</span>
+      <span>&#128279;&nbsp;<a href="https://github.com/Rockstatata" target="_blank">github.com/Rockstatata</a></span>
+      <span>&#128279;&nbsp;<a href="https://linkedin.com/in/sarwad-hasan-siddiqui" target="_blank">linkedin.com/in/sarwad-hasan-siddiqui</a></span>
+      <span>&#127891;&nbsp;<a href="https://scholar.google.com/citations?user=l_J2QaYAAAAJ" target="_blank">Google Scholar</a></span>
+      <span>&#128205;&nbsp;Amar Ekushey Hall, KUET, Khulna</span>
+    </div>
+  </div>
+</header>
+
+<div class="body">
+<div class="top-layout">
+
+<main class="main">
+
+  <div class="section-title">Profile</div>
+  <p class="profile-text">
+    CSE undergraduate researcher at KUET building intelligent, high-performance systems at the intersection of AI, GPU computing and software engineering. Focus: AI systems, CUDA/HPC, efficient transformers, computer vision and HRI, with reproducible, measurable experiments. Aiming for graduate research in AI systems.
+  </p>
+
+  <div class="section-title">Research &amp; Publications</div>
+  <ul class="pub-list">
+    <li><b>Medora: A Consent-Aware, AI-Native Bilingual Platform for Healthcare Management and Consultation.</b> S. H. Siddiqui, A. Tahsin, K. S. Alam, S. I. Hossain. <span class="pub-status st-pub">Published</span></li>
+    <li>Paper at <span class="pub-venue">IEEE RO-MAN 2026</span> (human&ndash;robot interaction). <span class="pub-status st-pub">Published</span></li>
+    <li>Poster paper at <span class="pub-venue">IHCI 2026</span>. <span class="pub-status st-pub">Poster</span></li>
+    <li>Submission to <span class="pub-venue">IEEE ICRA 2027</span>. <span class="pub-status st-rev">Under review</span></li>
+    <li>Submission to <span class="pub-venue">ICCIT 2027</span>. <span class="pub-status st-rev">Under review</span></li>
+    <li><b>FLAG 2027 (ICASSP Grand Challenge)</b>: cross-lingual face&ndash;voice verification; verified FOP reproduction reaching 36.32% dev EER vs. 36.92% baseline. <span class="pub-status st-act">Ongoing</span></li>
+    <li><b>F2HF journal extension</b>: FFN-weighted head filtering for Vision Transformer explanations. <b>DriftRisk-LoRA</b>: drift-aware financial risk modelling (thesis). <span class="pub-status st-act">Ongoing</span></li>
+  </ul>
+
+  <div class="section-title">Selected Projects</div>
+  <div class="projects-grid">
+    <div class="project-item">
+      <div class="project-header"><span class="project-name">Medora</span><span class="project-tech">Next.js &middot; FastAPI &middot; PostgreSQL &middot; LLMs</span></div>
+      <a class="project-link" href="https://github.com/CSE-3200-System-Project/Medora">github.com/CSE-3200-System-Project/Medora</a>
+      <p class="project-desc">Bilingual, consent-governed health platform: policy chokepoint around assistive AI, review-gated prescription OCR, idempotent booking. 100+ commits.</p>
+    </div>
+    <div class="project-item">
+      <div class="project-header"><span class="project-name">Agun Panjika</span><span class="project-tech">Python &middot; React &middot; D3 &middot; Three.js</span></div>
+      <a class="project-link" href="https://github.com/Rockstatata/Agun-Panjika">github.com/Rockstatata/Agun-Panjika</a>
+      <p class="project-desc">NASA Space Apps 2026: harmonised MODIS/VIIRS fire history for Bangladesh with seasonal alerts and a two-week outlook.</p>
+    </div>
+    <div class="project-item">
+      <div class="project-header"><span class="project-name">Jagoo Bahee</span><span class="project-tech">TypeScript &middot; Rust &middot; Reticulum</span></div>
+      <a class="project-link" href="https://github.com/tasmirz/jagoo-bahee">github.com/tasmirz/jagoo-bahee</a>
+      <p class="project-desc">Censorship-resistant federated forum that survives a national blackout via signed envelopes over HTTP, mesh and LoRa. July Hackathon 2026 runners-up.</p>
+    </div>
+    <div class="project-item">
+      <div class="project-header"><span class="project-name">Dhara</span><span class="project-tech">PyTorch &middot; BGE-m3 &middot; LoRA</span></div>
+      <a class="project-link" href="https://github.com/Rockstatata/Dhara">github.com/Rockstatata/Dhara</a>
+      <p class="project-desc">Bangla legal retrieval across 1,227 Acts; fine-tuned BGE-m3 + LoRA lifts Recall@10 from 0.067 (BM25) to 0.50.</p>
+    </div>
+    <div class="project-item">
+      <div class="project-header"><span class="project-name">Voyager-2</span><span class="project-tech">C++20 &middot; OpenGL &middot; GLSL</span></div>
+      <a class="project-link" href="https://github.com/Rockstatata/Voyager-2">github.com/Rockstatata/Voyager-2</a>
+      <p class="project-desc">GPU solar-system renderer driven by NASA/JPL Horizons data: floating origin, shadow maps, LOD and a ray-traced view.</p>
+    </div>
+    <div class="project-item">
+      <div class="project-header"><span class="project-name">Interlink</span><span class="project-tech">React Native &middot; TypeScript</span></div>
+      <a class="project-link" href="https://github.com/Logarithm-Studio/Interlink-backend">github.com/Logarithm-Studio/Interlink-backend</a>
+      <p class="project-desc">AI agent automating daily and professional workflows; core engineer on app and backend at Logarithm Studio.</p>
+    </div>
+  </div>
+
+</main>
+
+<aside class="sidebar">
+
+  <div class="section-title">Education</div>
+  <div class="edu-item">
+    <div class="edu-degree">B.Sc. in Computer Science &amp; Engineering</div>
+    <div class="edu-school">Khulna University of Engineering &amp; Technology (KUET)</div>
+    <div class="edu-meta">2023 &ndash; 2027 &nbsp;&middot;&nbsp; CGPA: 3.77 / 4.00 &nbsp;&middot;&nbsp; Dean's List &times;2</div>
+  </div>
+  <div class="edu-item">
+    <div class="edu-degree">Higher Secondary Certificate (HSC)</div>
+    <div class="edu-school">Notre Dame College, Dhaka</div>
+    <div class="edu-meta">2019 &ndash; 2021 &nbsp;&middot;&nbsp; GPA: 5.00 / 5.00</div>
+  </div>
+  <div class="edu-item">
+    <div class="edu-degree">Secondary School Certificate (SSC)</div>
+    <div class="edu-school">Adamjee Cantonment Public School, Dhaka</div>
+    <div class="edu-meta">2015 &ndash; 2019 &nbsp;&middot;&nbsp; GPA: 5.00 / 5.00</div>
+  </div>
+
+
+  <div class="section-title">Technical Skills</div>
+  <div class="skills-wrap">
+    <span class="skill-tag">Python</span>
+    <span class="skill-tag">C/C++</span>
+    <span class="skill-tag">CUDA</span>
+    <span class="skill-tag">PyTorch</span>
+    <span class="skill-tag">Transformers / LoRA</span>
+    <span class="skill-tag">Computer Vision</span>
+    <span class="skill-tag">OpenGL / GLSL</span>
+    <span class="skill-tag">TypeScript</span>
+    <span class="skill-tag">React / Next.js</span>
+    <span class="skill-tag">React Native</span>
+    <span class="skill-tag">FastAPI / Django</span>
+    <span class="skill-tag">PostgreSQL</span>
+    <span class="skill-tag">Docker</span>
+    <span class="skill-tag">Flex &amp; Bison</span>
+    <span class="skill-tag">Java / Swift</span>
+  </div>
+
+  <div class="section-title">Achievements</div>
+  <ul class="ach-list">
+    <li>Runners-up &mdash; July Hackathon 2026</li>
+    <li>3rd Place &mdash; Nascenia AI Hackathon (Kaggle)</li>
+    <li>1st Runner-Up &mdash; Intl. Bridging Engineering &amp; CS Competition 2025 (ILM AI)</li>
+    <li>Dean&rsquo;s List &times;2 &amp; Dean&rsquo;s Award, KUET</li>
+    <li>3rd Runner-Up &mdash; Case Crack 2.0 (KBEC)</li>
+    <li>2nd Place &mdash; Spark Fusion 2K21 (Hardware Design)</li>
+  </ul>
+
+  <div class="section-title">Languages</div>
+  <div class="lang-item"><span>Bengali</span><span class="lang-level">Native</span></div>
+  <div class="lang-item"><span>English</span><span class="lang-level">Professional</span></div>
+
+</aside>
+</div>
+
+<section class="experience-section">
+  <div class="section-title">Experience &amp; Leadership</div>
+  <div class="experience-grid">
+    <div class="exp-item">
+      <div class="exp-header"><span class="exp-role">Undergraduate Researcher</span><span class="exp-date">2025 &ndash; Present</span></div>
+      <div class="exp-org">KUET</div>
+      <div class="exp-desc">HRI, healthcare AI, computer vision and multimodal research: Medora, RO-MAN, IHCI, ICRA/ICCIT submissions, FLAG 2027.</div>
+    </div>
+    <div class="exp-item">
+      <div class="exp-header"><span class="exp-role">Software Engineer</span><span class="exp-date">Mar 2026 &ndash; Present</span></div>
+      <div class="exp-org">Logarithm Studio</div>
+      <div class="exp-desc">Core engineer on Interlink (AI automation agent): React Native app and TypeScript backend.</div>
+    </div>
+    <div class="exp-item">
+      <div class="exp-header"><span class="exp-role">Junior Software Developer (Part-time)</span><span class="exp-date">Oct 2025 &ndash; 2026</span></div>
+      <div class="exp-org">AlgoSoft Technologies Limited</div>
+      <div class="exp-desc">Mobile apps and Python services incl. the AI-native Daily Gratitude journal. Intern from Apr 2025.</div>
+    </div>
+    <div class="exp-item">
+      <div class="exp-header"><span class="exp-role">Senior Executive</span><span class="exp-date">Sep 2025 &ndash; Present</span></div>
+      <div class="exp-org">Team Durbar &middot; KUET Mars Rover</div>
+      <div class="exp-desc">Member of KUET's rover team building rovers for international rover challenges.</div>
+    </div>
+    <div class="exp-item">
+      <div class="exp-header"><span class="exp-role">Asst. Joint Secretary &amp; Group Co-Organizer</span><span class="exp-date">2026</span></div>
+      <div class="exp-org">TEDxKUET 2026</div>
+      <div class="exp-desc">PR team: guest &amp; speaker relations, logistics, promo videos reaching 50.5K+ views.</div>
+    </div>
+    <div class="exp-item">
+      <div class="exp-header"><span class="exp-role">Secretary of PR</span><span class="exp-date">Jun 2026 &ndash; Present</span></div>
+      <div class="exp-org">KUET Business &amp; Entrepreneurship Club (KBEC)</div>
+      <div class="exp-desc">Operational planning for events and workshops; logistics, communications and onboarding.</div>
+    </div>
+  </div>
+</section>
+
+</div>
+</div>
+</body>
+</html>
