@@ -3,7 +3,7 @@
 import { animate, useInView } from "motion/react";
 import { useEffect, useRef } from "react";
 
-/** Animates the numeric part of values like "3.77", "40+" or "5". */
+/** Animates the numeric part of values like "3.78", "40+" or "5". */
 export function CountUp({ value }: { value: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-10% 0px" });

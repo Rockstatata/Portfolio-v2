@@ -21,10 +21,12 @@ export const metadata: Metadata = {
     template: "%s · Sarwad Hasan Siddiqui",
   },
   description:
-    "Sarwad Hasan Siddiqui: CS researcher at KUET working on GPU-accelerated AI systems, efficient transformers, computer vision and human-robot interaction.",
+    "Sarwad Hasan Siddiqui: KUET CSE undergraduate and unofficial international research intern working with Kent State University's ATR Lab on AI systems and robotics research.",
   keywords: [
     "Sarwad Hasan Siddiqui",
     "KUET",
+    "Kent State University",
+    "ATR Lab",
     "software engineer",
     "AI",
     "robotics",

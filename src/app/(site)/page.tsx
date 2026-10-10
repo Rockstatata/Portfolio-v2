@@ -9,12 +9,13 @@ import { ResearchFocus } from "@/components/site/research-focus";
 import { Skills } from "@/components/site/skills";
 import { getContent } from "@/lib/content";
 import { initialsOf } from "@/lib/utils";
+import { sortTimeline } from "@/lib/timeline";
 
 export default async function Home() {
   const content = await getContent();
   const { profile, experiences } = content;
-  const current = experiences.find(
-    (e) => /present/i.test(e.period) && e.kind === "Work",
+  const current = sortTimeline(experiences).find(
+    (e) => /present/i.test(e.period) && (e.kind === "Research" || e.kind === "Work"),
   );
 
   const jsonLd = {

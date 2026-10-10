@@ -278,7 +278,7 @@ export const collections: Record<CollectionKey, Collection> = {
         name: "score",
         label: "Result",
         type: "text",
-        placeholder: "CGPA 3.77 / 4.00",
+        placeholder: "CGPA 3.78 / 4.00",
       },
       visible,
     ],

@@ -22,15 +22,15 @@ type Seed<T> = Omit<T, "id" | "createdAt" | "sortOrder" | "visible"> &
 export const seedProfile: Omit<Profile, "id" | "updatedAt"> = {
   name: "Sarwad Hasan Siddiqui",
   headline:
-    "CS researcher at KUET working on GPU-accelerated AI systems: efficient transformers, computer vision and the infrastructure that makes models fast, small and reliable.",
+    "CSE undergraduate at KUET and an unofficial international research intern working with Kent State University's ATR Lab, focused on GPU-accelerated AI systems, efficient transformers and computer vision.",
   roles: [
     "AI Systems Researcher",
     "GPU & HPC · CUDA",
     "Efficient Transformers",
     "Computer Vision & Multimodal AI",
-    "Software Engineer @ Logarithm Studio",
+    "International Research Intern (unofficial) @ Kent State University",
   ],
-  bio: "I'm a Computer Science & Engineering undergraduate at KUET building intelligent, high-performance systems where AI, GPU computing and software engineering meet. My work started in general software development and has moved steadily down the stack: AI systems, CUDA and HPC, sparse and tensor computation, efficient transformers, model compression and computer vision. I like taking a technically difficult idea, whether a model architecture, an optimisation or a GPU workload, and turning it into a system that can be measured and reproduced. Recent work spans Medora, a consent-governed bilingual health platform; reproducing and beating an ICASSP challenge baseline for cross-lingual face–voice verification; explainability for Vision Transformers; and a drift-aware risk model for quantitative finance. I'm building toward graduate research in AI systems, and eventually toward applying that engineering to space technology and exploration.",
+  bio: "I'm a Computer Science & Engineering undergraduate at KUET and an unofficial international research intern working closely with Kent State University's ATR Lab. I collaborate with Mohammad Insanur Rahman Shuvo, Nafiul Alam and Raiyan Ashraf under Professor Jong-Hoon Kim. I build intelligent, high-performance systems where AI, GPU computing and software engineering meet. My work started in general software development and has moved steadily down the stack: AI systems, CUDA and HPC, sparse and tensor computation, efficient transformers, model compression and computer vision. I like taking a technically difficult idea, whether a model architecture, an optimisation or a GPU workload, and turning it into a system that can be measured and reproduced. Recent work spans Medora, a consent-governed bilingual health platform; reproducing and beating an ICASSP challenge baseline for cross-lingual face–voice verification; explainability for Vision Transformers; and a drift-aware risk model for quantitative finance. I'm building toward graduate research in AI systems, and eventually toward applying that engineering to space technology and exploration.",
   location: "Khulna, Bangladesh",
   email: "sarwad015@gmail.com",
   avatarUrl: "/images/sarwad.jpg",
@@ -50,7 +50,7 @@ export const seedProfile: Omit<Profile, "id" | "updatedAt"> = {
   ],
   stats: [
     { label: "Papers & submissions", value: "5" },
-    { label: "CGPA · Dean's List ×2", value: "3.77" },
+    { label: "CGPA · Dean's List ×2", value: "3.78" },
     { label: "Competition podiums", value: "6" },
     { label: "Systems shipped", value: "20+" },
   ],
@@ -688,6 +688,15 @@ export const seedExperiences: Seed<Experience>[] = [
       "Leads operational planning for club events and workshops; coordinates logistics, communications and member onboarding.",
   },
   {
+    role: "International Research Intern (unofficial)",
+    org: "Kent State University · ATR Lab",
+    orgUrl: "https://www.kent.edu",
+    period: "Mar 2026 — Present",
+    kind: "Research",
+    description:
+      "Working closely with Kent State University's ATR Lab since March 2026, with an almost full-time commitment since September 2026. Collaborating with Mohammad Insanur Rahman Shuvo, Nafiul Alam and Raiyan Ashraf under Professor Jong-Hoon Kim. This is an unofficial research internship, rather than a formal university appointment.",
+  },
+  {
     role: "Software Engineer",
     org: "Logarithm Studio",
     orgUrl: "https://github.com/Logarithm-Studio",
@@ -732,15 +741,6 @@ export const seedExperiences: Seed<Experience>[] = [
     description:
       "Product features and UI implementation for mobile and web projects.",
   },
-  {
-    role: "Undergraduate Researcher",
-    org: "Khulna University of Engineering & Technology (KUET)",
-    orgUrl: "https://www.kuet.ac.bd",
-    period: "2025 — Present",
-    kind: "Research",
-    description:
-      "Research across AI systems, computer vision, HRI and healthcare AI with KUET faculty: a published Medora paper, IEEE RO-MAN and IHCI work, ICRA 2027 and ICCIT submissions, FLAG 2027 (ICASSP Grand Challenge) and an F2HF journal extension.",
-  },
 ];
 
 export const seedEducation: Seed<Education>[] = [
@@ -748,7 +748,7 @@ export const seedEducation: Seed<Education>[] = [
     degree: "B.Sc. in Computer Science & Engineering",
     school: "Khulna University of Engineering & Technology (KUET)",
     period: "2023 — 2027",
-    score: "CGPA 3.77 / 4.00",
+    score: "CGPA 3.78 / 4.00",
   },
   {
     degree: "Higher Secondary Certificate (HSC)",
