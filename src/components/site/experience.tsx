@@ -6,6 +6,7 @@ import { useRef } from "react";
 import type { Experience as ExperienceRow } from "@/lib/db/schema";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { cn } from "@/lib/utils";
+import { sortTimeline } from "@/lib/timeline";
 
 const KIND_COLOR: Record<string, string> = {
   Work: "text-ion border-ion/30 bg-ion/10",
@@ -52,7 +53,7 @@ export function Experience({ items }: { items: ExperienceRow[] }) {
           aria-hidden
         />
 
-        {items.map((item, i) => {
+        {sortTimeline(items).map((item, i) => {
           const right = i % 2 === 1;
           return (
             <li

@@ -220,7 +220,7 @@ export const collections: Record<CollectionKey, Collection> = {
     label: "Experience",
     singular: "Experience",
     description:
-      "Jobs, leadership roles and volunteering for the Flight Log timeline.",
+      "Jobs, leadership roles and volunteering. The Flight Log shows newest start dates first; use Mon YYYY or YYYY for the period start.",
     titleField: "role",
     subtitleField: "org",
     fields: [

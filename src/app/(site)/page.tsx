@@ -52,7 +52,7 @@ export default async function Home() {
       <Experience
         items={[
           ...experiences,
-          // Schools join the end of the flight log, newest first.
+          // The timeline orders roles and schools together by start date.
           ...content.education.map((ed) => ({
             ...ed,
             id: -ed.id,

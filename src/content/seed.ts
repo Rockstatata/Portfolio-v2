@@ -679,13 +679,13 @@ export const seedPublications: Seed<Publication>[] = [
 
 export const seedExperiences: Seed<Experience>[] = [
   {
-    role: "Undergraduate Researcher",
-    org: "Khulna University of Engineering & Technology (KUET)",
-    orgUrl: "https://www.kuet.ac.bd",
-    period: "2025 — Present",
-    kind: "Research",
+    role: "Secretary of PR",
+    org: "KUET Business & Entrepreneurship Club (KBEC)",
+    orgUrl: "",
+    period: "Jun 2026 — Present",
+    kind: "Leadership",
     description:
-      "Research across AI systems, computer vision, HRI and healthcare AI with KUET faculty: a published Medora paper, IEEE RO-MAN and IHCI work, ICRA 2027 and ICCIT submissions, FLAG 2027 (ICASSP Grand Challenge) and an F2HF journal extension.",
+      "Leads operational planning for club events and workshops; coordinates logistics, communications and member onboarding.",
   },
   {
     role: "Software Engineer",
@@ -697,13 +697,13 @@ export const seedExperiences: Seed<Experience>[] = [
       "Core engineer on Interlink, an AI automation agent: wrote most of the React Native app and TypeScript backend (≈120 commits), plus product features and iterative delivery across studio apps.",
   },
   {
-    role: "Senior Executive",
-    org: "Team Durbar · KUET Mars Rover",
-    orgUrl: "https://www.linkedin.com/company/kuetmarsrover/",
-    period: "Sep 2025 — Present",
-    kind: "Research",
+    role: "Assistant Joint Secretary & Group Co-Organizer",
+    org: "TEDxKUET 2026",
+    orgUrl: "",
+    period: "2026",
+    kind: "Leadership",
     description:
-      "Member of KUET's Mars rover team, which designs and builds rovers for international rover challenges.",
+      "Public Relations team: guest and speaker relations, logistics, and promotional video content for campaigns that reached 50.5K+ views before the event.",
   },
   {
     role: "Junior Software Developer (Part-time)",
@@ -715,6 +715,15 @@ export const seedExperiences: Seed<Experience>[] = [
       "Shipped mobile apps and Python services, including the AI-native Daily Gratitude journaling app, after an internship with the same team.",
   },
   {
+    role: "Senior Executive",
+    org: "Team Durbar · KUET Mars Rover",
+    orgUrl: "https://www.linkedin.com/company/kuetmarsrover/",
+    period: "Sep 2025 — Present",
+    kind: "Research",
+    description:
+      "Member of KUET's Mars rover team, which designs and builds rovers for international rover challenges.",
+  },
+  {
     role: "Software Developer Intern",
     org: "AlgoSoft Technologies Limited",
     orgUrl: "https://www.linkedin.com/company/algosoftbd/",
@@ -724,22 +733,13 @@ export const seedExperiences: Seed<Experience>[] = [
       "Product features and UI implementation for mobile and web projects.",
   },
   {
-    role: "Assistant Joint Secretary & Group Co-Organizer",
-    org: "TEDxKUET 2026",
-    orgUrl: "",
-    period: "2026",
-    kind: "Leadership",
+    role: "Undergraduate Researcher",
+    org: "Khulna University of Engineering & Technology (KUET)",
+    orgUrl: "https://www.kuet.ac.bd",
+    period: "2025 — Present",
+    kind: "Research",
     description:
-      "Public Relations team: guest and speaker relations, logistics, and promotional video content for campaigns that reached 50.5K+ views before the event.",
-  },
-  {
-    role: "Secretary of PR",
-    org: "KUET Business & Entrepreneurship Club (KBEC)",
-    orgUrl: "",
-    period: "Jun 2026 — Present",
-    kind: "Leadership",
-    description:
-      "Leads operational planning for club events and workshops; coordinates logistics, communications and member onboarding.",
+      "Research across AI systems, computer vision, HRI and healthcare AI with KUET faculty: a published Medora paper, IEEE RO-MAN and IHCI work, ICRA 2027 and ICCIT submissions, FLAG 2027 (ICASSP Grand Challenge) and an F2HF journal extension.",
   },
 ];
 
