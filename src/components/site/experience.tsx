@@ -7,6 +7,7 @@ import type { Experience as ExperienceRow } from "@/lib/db/schema";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { cn } from "@/lib/utils";
 import { sortTimeline } from "@/lib/timeline";
+import { Reveal } from "@/components/ui/reveal";
 
 const KIND_COLOR: Record<string, string> = {
   Work: "text-ion border-ion/30 bg-ion/10",
@@ -70,11 +71,7 @@ export function Experience({ items }: { items: ExperienceRow[] }) {
                 <span className="size-[5px] rounded-full bg-ion shadow-[0_0_10px_2px_rgb(34_211_238/0.8)]" />
               </motion.span>
 
-              <motion.div
-                initial={{ opacity: 1, y: 0 }}
-                whileInView={{ opacity: 1, y: [12, 0] }}
-                viewport={{ once: true, margin: "-15% 0px" }}
-                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+              <Reveal
                 className={cn(
                   right ? "md:col-start-2 md:pl-14" : "md:pr-14 md:text-right",
                 )}
@@ -125,7 +122,7 @@ export function Experience({ items }: { items: ExperienceRow[] }) {
                     {item.description}
                   </p>
                 )}
-              </motion.div>
+              </Reveal>
             </li>
           );
         })}

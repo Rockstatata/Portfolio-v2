@@ -27,7 +27,9 @@ for (const viewport of [
     await expect(
       page.getByText("Current mission", { exact: true }),
     ).toBeVisible();
-    expect(await page.locator("#top canvas").count()).toBe(0);
+    await expect(page.locator("[data-galaxy] canvas")).toHaveCount(1);
+    await expect(page.locator("[data-orbital-core] canvas")).toHaveCount(1);
+    await expect(page.locator(".arrival-screen")).toHaveCount(0);
     await page.screenshot({
       path: `.data/mobile-after-${viewport.width}.png`,
       caret: "initial",
@@ -52,13 +54,24 @@ for (const viewport of [
         `${id}: ${JSON.stringify(sizing)}`,
       ).toBeLessThanOrEqual(viewport.width);
     }
-    await page
-      .getByRole("button", { name: "Robotics", exact: true })
-      .first()
-      .click();
+    const warp = page.getByRole("button", { name: "Engage warp", exact: true });
+    await warp.click();
     await expect(
-      page.getByText("From language to action in the physical world."),
-    ).toBeVisible();
+      page.getByRole("button", { name: "Exit warp" }),
+    ).toHaveAttribute("aria-pressed", "true");
+    await page.getByRole("button", { name: "Reset orbit" }).click();
+    await expect(warp).toHaveAttribute("aria-pressed", "false");
+    await expect(
+      page
+        .locator("#top")
+        .getByRole("link", { name: "Instagram", exact: true }),
+    ).toHaveAttribute("href", "https://www.instagram.com/pianto._/");
+    await expect(
+      page.locator("#top").getByRole("link", { name: "Facebook", exact: true }),
+    ).toHaveAttribute("href", "https://www.facebook.com/Hasan.Sarwad07/");
+    await expect(
+      page.locator("#top").getByRole("link", { name: "LeetGPU", exact: true }),
+    ).toHaveAttribute("href", "https://leetgpu.com/UnbreakableProdigyf0e38");
     expect(errors).toEqual([]);
     await context.close();
   });
@@ -78,6 +91,49 @@ test("reduced motion and content without JavaScript", async ({ browser }) => {
     page.getByText("Current mission", { exact: true }),
   ).toBeVisible();
   await context.close();
+});
+
+test("scroll entrances repeat and unsupported WebGL stays usable", async ({
+  playwright,
+}) => {
+  const browser = await playwright.chromium.launch({
+    channel: "msedge",
+    args: ["--disable-webgl"],
+  });
+  const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.goto("http://localhost:3006", { waitUntil: "networkidle" });
+  await expect(page.locator(".arrival-screen")).toHaveCount(0);
+  await expect(page.locator(".galaxy-fallback")).toBeVisible();
+  await expect(page.locator(".core-fallback")).toBeVisible();
+  await expect(page.locator("h1")).toBeVisible();
+  const heading = page.locator("#about h2").locator("..");
+  const position = await heading.evaluate((element) => ({
+    top: element.getBoundingClientRect().top + window.scrollY,
+    height: element.getBoundingClientRect().height,
+  }));
+  const opacity = () =>
+    heading.evaluate((element) => Number(getComputedStyle(element).opacity));
+  for (let repeat = 0; repeat < 2; repeat++) {
+    await page.evaluate(
+      ({ top, height }) =>
+        window.scrollTo({
+          top: top - (window.innerHeight - height) / 2,
+          behavior: "instant",
+        }),
+      position,
+    );
+    await expect.poll(opacity).toBeGreaterThan(0.95);
+    await page.evaluate(
+      ({ top, height }) =>
+        window.scrollTo({ top: top + height + 100, behavior: "instant" }),
+      position,
+    );
+    await expect.poll(opacity).toBeLessThan(0.85);
+  }
+  expect(errors).toEqual([]);
+  await browser.close();
 });
 
 test("blog draft, preview, publish, search, edit and unpublish", async ({

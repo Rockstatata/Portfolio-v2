@@ -1,34 +1,17 @@
 "use client";
 
-import { ArrowDown, ArrowUpRight, Download, Sparkles } from "lucide-react";
+import { ArrowUpRight, Download, Sparkles } from "lucide-react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import type { Profile } from "@/lib/db/schema";
 import { SocialIcon } from "@/components/ui/brand-icons";
-import { useEnhancedVisuals } from "@/lib/use-enhanced-visuals";
+import { OrbitalCore } from "./orbital-core";
+import { SceneBoundary } from "@/components/ui/scene-boundary";
 
 const GalaxyScene = dynamic(() => import("@/components/space/galaxy-scene"), {
   ssr: false,
 });
-const SIGNALS = [
-  {
-    label: "AI systems",
-    detail: "Efficient models. Measurable performance.",
-    href: "#focus",
-  },
-  {
-    label: "Robotics",
-    detail: "From language to action in the physical world.",
-    href: "#research",
-  },
-  {
-    label: "Things shipped",
-    detail: "Explore the ideas that became working systems.",
-    href: "#projects",
-  },
-];
-
 function RoleTicker({ roles }: { roles: string[] }) {
   const [index, setIndex] = useState(0);
   useEffect(() => {
@@ -61,10 +44,24 @@ export function Hero({
   profile: Profile;
   currentRole?: string;
 }) {
-  const enhanced = useEnhancedVisuals();
   const progress = useRef(0);
-  const [signal, setSignal] = useState(0);
   const [first, ...rest] = profile.name.split(" ");
+  useEffect(() => {
+    const update = () => {
+      const hero = document.getElementById("top");
+      progress.current = Math.min(
+        1,
+        Math.max(
+          0,
+          window.scrollY /
+            Math.max(1, hero?.offsetHeight ?? window.innerHeight),
+        ),
+      );
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, []);
   return (
     <section id="top" className="hero-section relative isolate overflow-hidden">
       <div
@@ -76,14 +73,18 @@ export function Hero({
         <div className="hero-orbit orbit-one" />
         <div className="hero-orbit orbit-two" />
       </div>
-      {enhanced && (
-        <div
-          className="pointer-events-none absolute inset-0 -z-10 opacity-60"
-          aria-hidden
+      <div
+        id="galaxy-host"
+        className="hero-galaxy pointer-events-none absolute inset-0 -z-10 opacity-80"
+        aria-hidden
+      >
+        <SceneBoundary
+          fallback={<div className="galaxy-fallback" />}
+          onFailure={() => window.dispatchEvent(new Event("galaxy-ready"))}
         >
           <GalaxyScene progress={progress} />
-        </div>
-      )}
+        </SceneBoundary>
+      </div>
       <div className="relative mx-auto grid max-w-7xl gap-10 px-5 pt-24 pb-12 sm:px-8 sm:pt-32 lg:min-h-svh lg:grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)] lg:items-center lg:gap-16 lg:pt-36 lg:pb-24">
         <div className="min-w-0">
           <div className="hud-label mb-5 flex flex-wrap items-center gap-x-4 gap-y-2 !tracking-[0.14em]">
@@ -156,66 +157,16 @@ export function Hero({
             </Link>
           </div>
         </div>
-        <div className="signal-console glass relative min-w-0 overflow-hidden rounded-3xl p-5 sm:p-7">
-          <div className="hud-label flex items-center justify-between">
-            <span>Signal explorer</span>
-            <span className="text-aurora">Live</span>
-          </div>
-          <div
-            className="signal-system relative mx-auto my-7 grid aspect-square w-40 place-items-center sm:w-52"
-            aria-hidden
-          >
-            <div className="absolute inset-0 animate-orbit rounded-full border border-ion/25 [--orbit-duration:24s]">
-              <span className="absolute top-0 left-1/2 size-2 rounded-full bg-ion shadow-[0_0_16px_#22d3ee]" />
-            </div>
-            <div className="absolute inset-5 animate-orbit-reverse rounded-full border border-plasma/40 [--orbit-duration:16s]">
-              <span className="absolute top-1/2 -left-1 size-2 rounded-full bg-plasma" />
-            </div>
-            <span className="grid size-20 place-items-center rounded-full border border-ion/30 bg-ion/5 font-display text-lg text-ion shadow-[0_0_50px_rgb(34_211_238/0.2)]">
-              SHS
-            </span>
-          </div>
-          <div
-            className="flex flex-wrap gap-2"
-            aria-label="Explore research interests"
-          >
-            {SIGNALS.map((s, i) => (
-              <button
-                key={s.label}
-                type="button"
-                aria-pressed={i === signal}
-                onClick={() => setSignal(i)}
-                className={`min-h-11 rounded-full border px-3 text-xs transition ${signal === i ? "border-ion/40 bg-ion/10 text-ion" : "border-line text-dim hover:text-white"}`}
-              >
-                {s.label}
-              </button>
-            ))}
-          </div>
-          <div className="mt-5 min-h-20" aria-live="polite">
-            <p className="text-sm leading-6 text-ink">
-              {SIGNALS[signal].detail}
-            </p>
-            <a
-              href={SIGNALS[signal].href}
-              className="mt-3 inline-flex min-h-11 items-center gap-2 text-xs text-ion"
-            >
-              Follow this signal
-              <ArrowUpRight className="size-3.5" />
-            </a>
-          </div>
-          {profile.availability && (
-            <p className="mt-4 border-t border-line pt-4 text-xs leading-6 text-dim">
-              {profile.availability}
-            </p>
-          )}
-        </div>
+        <OrbitalCore />
       </div>
       <a
         href="#about"
         className="mx-auto mb-8 flex w-fit items-center gap-2 font-mono text-xs text-dim transition hover:text-ion"
       >
         Continue the journey
-        <ArrowDown className="size-3.5" />
+        <span className="scroll-wheel" aria-hidden="true">
+          <span />
+        </span>
       </a>
     </section>
   );

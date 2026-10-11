@@ -7,12 +7,16 @@ import { initialsOf } from "@/lib/utils";
 import { VisualProvider } from "@/components/site/visual-provider";
 import { Suspense } from "react";
 import Link from "next/link";
+import { Arrival } from "@/components/site/arrival";
+import { ScrollConsole } from "@/components/site/scroll-console";
 
 export default async function SiteLayout({ children }: LayoutProps<"/">) {
   const { profile } = await getContent();
   return (
     <VisualProvider>
       <SmoothScroll>
+        <Arrival />
+        <ScrollConsole />
         <a
           href="#main-content"
           className="sr-only fixed top-3 left-3 z-[100] rounded-full bg-white px-5 py-3 text-sm text-void focus:not-sr-only"

@@ -3,6 +3,7 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
+import { SceneFrames, useSceneState } from "./scene-state";
 
 const vertexShader = /* glsl */ `
   uniform float uTime;
@@ -98,9 +99,9 @@ function buildGalaxy(count: number) {
   return g;
 }
 
-type GalaxyProps = { count: number };
+type GalaxyProps = { count: number; reduced: boolean };
 
-function Galaxy({ count }: GalaxyProps) {
+function Galaxy({ count, reduced }: GalaxyProps) {
   const material = useRef<THREE.ShaderMaterial>(null);
   const { gl } = useThree();
 
@@ -118,7 +119,8 @@ function Galaxy({ count }: GalaxyProps) {
   useEffect(() => () => geometry.dispose(), [geometry]);
 
   useFrame((_, delta) => {
-    if (material.current) material.current.uniforms.uTime.value += delta * 0.32;
+    if (material.current && !reduced)
+      material.current.uniforms.uTime.value += Math.min(delta, 0.1) * 0.32;
   });
 
   return (
@@ -142,32 +144,27 @@ export default function GalaxyScene({
 }: {
   progress: React.RefObject<number>;
 }) {
-  const [count] = useState(() => {
-    const small = window.matchMedia("(max-width: 768px)").matches;
-    return small || (navigator.hardwareConcurrency ?? 4) <= 4 ? 12000 : 36000;
-  });
-  const [active, setActive] = useState(true);
-  const [pageVisible, setPageVisible] = useState(true);
-  const host = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const updateVisibility = () => setPageVisible(document.visibilityState === "visible");
-    document.addEventListener("visibilitychange", updateVisibility);
-    const io = new IntersectionObserver(
-      ([entry]) => setActive(entry.isIntersecting),
-      {
-        threshold: 0,
-      },
-    );
-    if (host.current) io.observe(host.current);
-    return () => { io.disconnect(); document.removeEventListener("visibilitychange", updateVisibility); };
-  }, []);
+  const [mobile] = useState(
+    () => window.matchMedia("(pointer: coarse), (max-width: 1023px)").matches,
+  );
+  const count = mobile
+    ? 10000
+    : (navigator.hardwareConcurrency ?? 4) <= 4
+      ? 16000
+      : 36000;
+  const { host, active, reduced } = useSceneState();
 
   return (
-    <div ref={host} className="absolute inset-0">
+    <div ref={host} className="absolute inset-0" data-galaxy="true">
       <Canvas
-        frameloop={active && pageVisible ? "always" : "never"}
-        dpr={[1, 1.25]}
+        frameloop={!active ? "never" : mobile || reduced ? "demand" : "always"}
+        dpr={mobile ? 1 : [1, 1.25]}
+        fallback={<div className="galaxy-fallback" />}
+        onCreated={() => {
+          const host = document.getElementById("galaxy-host");
+          if (host) host.dataset.ready = "true";
+          window.dispatchEvent(new Event("galaxy-ready"));
+        }}
         camera={{ position: [0, 5, 6.4], fov: 55, near: 0.1, far: 100 }}
         gl={{
           antialias: false,
@@ -175,7 +172,8 @@ export default function GalaxyScene({
           powerPreference: "high-performance",
         }}
       >
-        <GalaxyGroup count={count} progress={progress} />
+        <SceneFrames active={active} reduced={reduced} mobile={mobile} />
+        <GalaxyGroup count={count} progress={progress} reduced={reduced} />
       </Canvas>
     </div>
   );
@@ -185,9 +183,11 @@ export default function GalaxyScene({
 function GalaxyGroup({
   count,
   progress,
+  reduced,
 }: {
   count: number;
   progress: React.RefObject<number>;
+  reduced: boolean;
 }) {
   const group = useRef<THREE.Group>(null);
   const pointer = useRef({ x: 0, y: 0 });
@@ -201,7 +201,7 @@ function GalaxyGroup({
   }, []);
 
   useFrame(({ camera, size }, delta) => {
-    const p = progress.current ?? 0;
+    const p = reduced ? 0 : (progress.current ?? 0);
     const wide = size.width > 900;
     const k = 1 - Math.pow(0.0015, Math.min(delta, 0.1));
 
@@ -222,7 +222,7 @@ function GalaxyGroup({
 
   return (
     <group ref={group}>
-      <Galaxy count={count} />
+      <Galaxy count={count} reduced={reduced} />
     </group>
   );
 }
