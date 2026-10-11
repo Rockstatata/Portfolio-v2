@@ -144,12 +144,15 @@ export default function GalaxyScene({
 }) {
   const [count] = useState(() => {
     const small = window.matchMedia("(max-width: 768px)").matches;
-    return small || (navigator.hardwareConcurrency ?? 4) <= 4 ? 32000 : 80000;
+    return small || (navigator.hardwareConcurrency ?? 4) <= 4 ? 12000 : 36000;
   });
   const [active, setActive] = useState(true);
+  const [pageVisible, setPageVisible] = useState(true);
   const host = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const updateVisibility = () => setPageVisible(document.visibilityState === "visible");
+    document.addEventListener("visibilitychange", updateVisibility);
     const io = new IntersectionObserver(
       ([entry]) => setActive(entry.isIntersecting),
       {
@@ -157,14 +160,14 @@ export default function GalaxyScene({
       },
     );
     if (host.current) io.observe(host.current);
-    return () => io.disconnect();
+    return () => { io.disconnect(); document.removeEventListener("visibilitychange", updateVisibility); };
   }, []);
 
   return (
     <div ref={host} className="absolute inset-0">
       <Canvas
-        frameloop={active ? "always" : "never"}
-        dpr={[1, 1.75]}
+        frameloop={active && pageVisible ? "always" : "never"}
+        dpr={[1, 1.25]}
         camera={{ position: [0, 5, 6.4], fov: 55, near: 0.1, far: 100 }}
         gl={{
           antialias: false,

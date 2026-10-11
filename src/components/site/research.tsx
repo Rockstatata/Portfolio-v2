@@ -48,7 +48,7 @@ export function Research({ publications }: { publications: Publication[] }) {
   return (
     <section
       id="research"
-      className="relative mx-auto max-w-7xl px-5 py-28 sm:px-8 md:py-40"
+      className="relative mx-auto max-w-7xl px-5 py-16 sm:px-8 md:py-32"
     >
       <SectionHeading
         index="03"

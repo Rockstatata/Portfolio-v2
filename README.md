@@ -52,7 +52,23 @@ honors and skills. Lists support drag-to-reorder and show/hide. Contact-form
 messages land in **Messages**. **GitHub import** turns repositories into hidden
 project drafts.
 
-## Where things live
+## Journal & blog
+
+Open `/admin/posts` and choose **New post**. Write the article in Markdown;
+the editor's **Preview** tab shows headings, links, images, tables and code.
+Add a short introduction, topics and an optional cover image (upload or URL).
+Save with **Draft** while writing. Select **Published**, keep **Visible** enabled,
+and save to publish at `/blog/<slug>` and in the homepage journal. Switch back
+to Draft to unpublish. Saving refreshes the public content immediately.
+
+Existing databases need `npm run db:posts` once. This only creates the blog table;
+it does not reset portfolio content. New databases can use `npm run db:push`.
+
+Run `npm run test:e2e` for phone layouts, navigation and the complete blog workflow.
+Tests create a separate local PGlite database and never use your hosted database.
+On Windows they use Microsoft Edge; install it if it is not available.
+
+## Source locations
 
 - `src/content/seed.ts` — initial content compiled from the CV, GitHub and LinkedIn
 - `src/lib/admin/collections.ts` — field definitions; the admin list, form and save action are generated from these

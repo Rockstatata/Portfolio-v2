@@ -23,7 +23,11 @@ export default async function CollectionPage({
       </Suspense>
       <PageHeader
         title={collection.label}
-        description={`${collection.description} Drag to reorder; the order here is the order on the site.`}
+        description={
+          key === "posts"
+            ? `${collection.description} Published, visible posts appear in the journal, with featured posts first and newest dates next.`
+            : `${collection.description} Drag to reorder; the order here is the order on the site.`
+        }
         action={
           <Link
             href={`/admin/${key}/new`}

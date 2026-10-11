@@ -88,6 +88,20 @@ export async function saveItem(
   if (!parsed.ok)
     return { errors: parsed.errors, error: "Fix the highlighted fields." };
 
+  if (key === "posts") {
+    parsed.values.updatedAt = new Date();
+    if (parsed.values.status === "published" && !parsed.values.publishedDate) {
+      const parts = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Dhaka",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }).formatToParts(new Date());
+      const part = (type: string) => parts.find((p) => p.type === type)?.value;
+      parsed.values.publishedDate = `${part("year")}-${part("month")}-${part("day")}`;
+    }
+  }
+
   const table = tableFor(key);
   try {
     if (id) {

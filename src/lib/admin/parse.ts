@@ -16,6 +16,16 @@ export function parseFields(fields: Field[], form: FormData): ParseResult {
     const text = typeof raw === "string" ? raw.trim() : "";
 
     switch (field.type) {
+      case "date":
+        if (
+          text &&
+          (!/^\d{4}-\d{2}-\d{2}$/.test(text) ||
+            Number.isNaN(Date.parse(text)) ||
+            new Date(text).toISOString().slice(0, 10) !== text)
+        )
+          errors[field.name] = "Use a valid date (YYYY-MM-DD)";
+        values[field.name] = text;
+        break;
       case "boolean":
         values[field.name] = raw === "on" || raw === "true";
         continue;

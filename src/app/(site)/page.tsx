@@ -10,6 +10,7 @@ import { Skills } from "@/components/site/skills";
 import { getContent } from "@/lib/content";
 import { initialsOf } from "@/lib/utils";
 import { sortTimeline } from "@/lib/timeline";
+import { Journal } from "@/components/site/journal";
 
 export default async function Home() {
   const content = await getContent();
@@ -67,6 +68,7 @@ export default async function Home() {
       />
       <Skills skills={content.skills} initials={initialsOf(profile.name)} />
       <Honors items={content.achievements} />
+      <Journal />
       <Contact profile={profile} />
     </>
   );

@@ -45,7 +45,7 @@ export function ResearchFocus({
   return (
     <section
       id="focus"
-      className="relative mx-auto max-w-7xl px-5 py-28 sm:px-8 md:py-36"
+      className="relative mx-auto max-w-7xl px-5 py-16 sm:px-8 md:py-32"
     >
       <SectionHeading
         index={index}

@@ -21,6 +21,7 @@ import { GithubIcon } from "@/components/ui/brand-icons";
 import { cn } from "@/lib/utils";
 
 const NAV = [
+  { href: "/admin/posts", label: "Blog & notes", icon: BookOpen },
   { href: "/admin", label: "Overview", icon: LayoutDashboard },
   { href: "/admin/profile", label: "Profile", icon: User },
   { href: "/admin/focusAreas", label: "Research vectors", icon: Telescope },

@@ -9,7 +9,7 @@ export function About({ profile }: { profile: Profile }) {
   return (
     <section
       id="about"
-      className="relative mx-auto max-w-7xl px-5 py-28 sm:px-8 md:py-40"
+      className="relative mx-auto max-w-7xl px-5 py-16 sm:px-8 md:py-32"
     >
       <SectionHeading
         index="01"
@@ -22,17 +22,21 @@ export function About({ profile }: { profile: Profile }) {
         }
       />
 
-      <div className="grid items-start gap-14 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20">
-        <Reveal className="relative mx-auto w-full max-w-sm lg:sticky lg:top-28">
+      <div className="grid items-start gap-16 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20">
+        <Reveal className="relative mx-auto w-full max-w-[240px] sm:max-w-sm lg:sticky lg:top-28">
           <div className="relative aspect-square">
             {/* Orbits around the portrait */}
             <div className="absolute -inset-6 rounded-full border border-dashed border-nebula/25" />
-            <div className="absolute -inset-6 animate-orbit rounded-full [--orbit-duration:28s]">
-              <span className="absolute top-1/2 -left-1.5 size-3 rounded-full bg-ion shadow-[0_0_18px_4px_rgb(34_211_238/0.6)]" />
+            <div className="absolute -inset-6 overflow-hidden rounded-full">
+              <div className="absolute inset-0 animate-orbit [--orbit-duration:28s]">
+                <span className="absolute top-1/2 left-0 size-3 rounded-full bg-ion shadow-[0_0_18px_4px_rgb(34_211_238/0.6)]" />
+              </div>
             </div>
-            <div className="absolute -inset-14 rounded-full border border-line" />
-            <div className="absolute -inset-14 animate-orbit-reverse rounded-full [--orbit-duration:46s]">
-              <span className="absolute -top-1 left-1/2 size-2 rounded-full bg-plasma shadow-[0_0_14px_3px_rgb(192_132_252/0.6)]" />
+            <div className="absolute -inset-8 rounded-full border border-line sm:-inset-14" />
+            <div className="absolute -inset-8 overflow-hidden rounded-full sm:-inset-14">
+              <div className="absolute inset-0 animate-orbit-reverse [--orbit-duration:46s]">
+                <span className="absolute top-0 left-1/2 size-2 rounded-full bg-plasma shadow-[0_0_14px_3px_rgb(192_132_252/0.6)]" />
+              </div>
             </div>
             <div className="relative size-full overflow-hidden rounded-full border border-line bg-hull shadow-[0_0_120px_-20px_rgb(139_92_246/0.55)]">
               {profile.avatarUrl && (

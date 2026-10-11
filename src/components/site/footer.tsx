@@ -32,7 +32,7 @@ export function Footer({ name }: { name: string }) {
         <div>
           © {now?.getFullYear() ?? ""} {name}. Built among the stars in Khulna.
         </div>
-        <div className="flex items-center gap-6">
+        <div className="flex flex-wrap items-center gap-4 sm:gap-6">
           <span className="hud-label">
             Local time <span className="text-ink tabular-nums">{time}</span> BST
           </span>

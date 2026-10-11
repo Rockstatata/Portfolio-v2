@@ -28,6 +28,8 @@ export function Starfield() {
     const reduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
+    const mobile = window.matchMedia("(pointer: coarse), (max-width: 767px)").matches;
+    let lastDraw = 0;
     let width = 0;
     let height = 0;
     let stars: Star[] = [];
@@ -37,7 +39,7 @@ export function Starfield() {
     let visible = true;
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = Math.min(window.devicePixelRatio || 1, mobile ? 1 : 1.5);
       width = document.documentElement.clientWidth;
       height = window.innerHeight;
       canvas.width = width * dpr;
@@ -46,7 +48,7 @@ export function Starfield() {
       canvas.style.height = `${height}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      const count = Math.round(Math.min(420, (width * height) / 3800));
+      const count = Math.round(Math.min(mobile ? 90 : 240, (width * height) / 5000));
       stars = Array.from({ length: count }, () => {
         const z = Math.random();
         return {
@@ -60,7 +62,12 @@ export function Starfield() {
       });
     };
 
-    const draw = () => {
+    const draw = (time = 0) => {
+      if (!reduced && time - lastDraw < (mobile ? 50 : 32)) {
+        if (visible) raf = requestAnimationFrame(draw);
+        return;
+      }
+      lastDraw = time;
       frame++;
       const scroll = window.scrollY;
       ctx.clearRect(0, 0, width, height);
@@ -88,7 +95,7 @@ export function Starfield() {
         }
       }
 
-      if (!reduced && Math.random() < 0.004 && meteors.length < 2) {
+      if (!reduced && !mobile && Math.random() < 0.004 && meteors.length < 2) {
         const fromLeft = Math.random() < 0.5;
         meteors.push({
           x: fromLeft
@@ -123,7 +130,7 @@ export function Starfield() {
         if (m.life <= 0) meteors.splice(i, 1);
       }
 
-      if (visible) raf = requestAnimationFrame(draw);
+      if (visible && !reduced) raf = requestAnimationFrame(draw);
     };
 
     const onVisibility = () => {
@@ -132,13 +139,14 @@ export function Starfield() {
       if (visible) raf = requestAnimationFrame(draw);
     };
 
+    const onResize = () => { resize(); if (reduced) draw(); };
     resize();
     raf = requestAnimationFrame(draw);
-    window.addEventListener("resize", resize);
+    window.addEventListener("resize", onResize);
     document.addEventListener("visibilitychange", onVisibility);
     return () => {
       cancelAnimationFrame(raf);
-      window.removeEventListener("resize", resize);
+      window.removeEventListener("resize", onResize);
       document.removeEventListener("visibilitychange", onVisibility);
     };
   }, []);

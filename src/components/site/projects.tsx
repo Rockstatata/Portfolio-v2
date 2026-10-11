@@ -1,10 +1,10 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import { ArrowUpRight, Lock, Radio } from "lucide-react";
+import { ArrowUpRight, Lock, Radio, Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import type { Project } from "@/lib/db/schema";
 import { Planet } from "@/components/space/planet";
 import { SectionHeading } from "@/components/ui/section-heading";
@@ -54,7 +54,7 @@ function Screen({ src, title }: { src: string; title: string }) {
         <span className="size-2 rounded-full bg-flare/70" />
         <span className="size-2 rounded-full bg-aurora/70" />
         <span className="ml-2 truncate font-mono text-[0.6rem] text-faint">
-          {title.toLowerCase().replace(/s+/g, "-")}
+          {title.toLowerCase().replace(/\s+/g, "-")}
         </span>
       </div>
       <div className="relative aspect-[16/10]">
@@ -189,12 +189,15 @@ function CompactCard({ project }: { project: Project }) {
 }
 
 export function Projects({ projects }: { projects: Project[] }) {
-  const featured = projects.filter((p) => p.featured);
-  const others = projects.filter((p) => !p.featured);
-  const categories = useMemo(
-    () => ["All", ...Array.from(new Set(others.map((p) => p.category)))],
-    [others],
+  const [query, setQuery] = useState("");
+  const matches = projects.filter((p) =>
+    `${p.title} ${p.tagline} ${p.category} ${p.tech.join(" ")}`
+      .toLowerCase()
+      .includes(query.trim().toLowerCase()),
   );
+  const featured = matches.filter((p) => p.featured);
+  const others = matches.filter((p) => !p.featured);
+  const categories = ["All", ...new Set(others.map(p => p.category))];
   const [filter, setFilter] = useState("All");
   const [expanded, setExpanded] = useState(false);
   const filtered =
@@ -204,7 +207,7 @@ export function Projects({ projects }: { projects: Project[] }) {
   return (
     <section
       id="projects"
-      className="relative mx-auto max-w-7xl px-5 py-28 sm:px-8 md:py-40"
+      className="relative mx-auto max-w-7xl px-5 py-16 sm:px-8 md:py-32"
     >
       <SectionHeading
         index="04"
@@ -218,6 +221,26 @@ export function Projects({ projects }: { projects: Project[] }) {
         intro="From NASA fire data to blackout-proof forums, robot arms and money that moves exactly once. Every world below is a real system, public or private."
       />
 
+      <label className="glass mb-8 flex max-w-xl items-center gap-3 rounded-2xl px-4">
+        <Search className="size-4 shrink-0 text-ion" />
+        <span className="sr-only">Search projects</span>
+        <input
+          type="search"
+          value={query}
+          onChange={(event) => {
+            setQuery(event.target.value);
+            setFilter("All");
+            setExpanded(false);
+          }}
+          placeholder="Find a project, technology or idea…"
+          className="min-h-12 w-full min-w-0 bg-transparent text-base text-ink outline-none"
+        />
+      </label>
+      {matches.length === 0 && (
+        <p role="status" className="py-8 text-dim">
+          No worlds found. Try another search.
+        </p>
+      )}
       <div className="grid gap-5 md:grid-cols-2">
         {featured.map((project, i) => {
           // The first card is a hero; an unpaired last card also spans the row.
@@ -235,7 +258,7 @@ export function Projects({ projects }: { projects: Project[] }) {
       </div>
 
       {others.length > 0 && (
-        <div className="mt-24">
+        <div className="mt-12 sm:mt-24">
           <Reveal className="mb-8 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
             <div>
               <div className="hud-label mb-2">Deep-space catalogue</div>
@@ -248,12 +271,13 @@ export function Projects({ projects }: { projects: Project[] }) {
                 <button
                   key={c}
                   type="button"
+                  aria-pressed={filter === c}
                   onClick={() => {
                     setFilter(c);
                     setExpanded(false);
                   }}
                   className={cn(
-                    "rounded-full border px-3.5 py-1.5 text-xs transition",
+                    "rounded-full border min-h-11 px-3.5 py-2 text-xs transition",
                     filter === c
                       ? "border-nebula/50 bg-nebula/15 text-white"
                       : "border-line text-dim hover:text-ink",

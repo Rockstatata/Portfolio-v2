@@ -25,7 +25,7 @@ export function Contact({ profile }: { profile: Profile }) {
   return (
     <section
       id="contact"
-      className="relative mx-auto max-w-7xl px-5 py-28 sm:px-8 md:py-40"
+      className="relative mx-auto max-w-7xl px-5 py-16 sm:px-8 md:py-32"
     >
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[70%] bg-[radial-gradient(ellipse_at_bottom,rgb(139_92_246/0.18),transparent_65%)]" />
       <SectionHeading

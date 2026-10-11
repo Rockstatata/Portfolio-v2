@@ -29,7 +29,7 @@ export function Experience({ items }: { items: ExperienceRow[] }) {
   return (
     <section
       id="experience"
-      className="relative mx-auto max-w-7xl px-5 py-28 sm:px-8 md:py-40"
+      className="relative mx-auto max-w-7xl px-5 py-16 sm:px-8 md:py-32"
     >
       <SectionHeading
         index="05"
@@ -71,8 +71,8 @@ export function Experience({ items }: { items: ExperienceRow[] }) {
               </motion.span>
 
               <motion.div
-                initial={{ opacity: 0, x: right ? 40 : -40 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 1, y: 0 }}
+                whileInView={{ opacity: 1, y: [12, 0] }}
                 viewport={{ once: true, margin: "-15% 0px" }}
                 transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
                 className={cn(

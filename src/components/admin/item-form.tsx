@@ -58,7 +58,7 @@ export function ItemForm({ collectionKey, id, fields, initial }: Props) {
           disabled={pending}
           className="rounded-full bg-white px-6 py-2.5 text-sm font-medium text-void transition hover:bg-plasma disabled:opacity-60"
         >
-          {pending ? "Saving…" : "Save & publish"}
+          {pending ? "Saving…" : collectionKey === "posts" ? "Save post" : "Save & publish"}
         </button>
         {state.error && <p className="text-sm text-nova">{state.error}</p>}
       </div>

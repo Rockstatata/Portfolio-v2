@@ -6,6 +6,7 @@ import type { Skill } from "@/lib/db/schema";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Reveal } from "@/components/ui/reveal";
 import { cn } from "@/lib/utils";
+import { useEnhancedVisuals } from "@/lib/use-enhanced-visuals";
 import {
   AsteroidBelt,
   Comet,
@@ -39,6 +40,7 @@ export function Skills({
     }));
   }, [skills]);
   const [active, setActive] = useState(0);
+  const enhanced = useEnhancedVisuals();
   const [hovered, setHovered] = useState<string | null>(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
 
@@ -46,7 +48,7 @@ export function Skills({
   const current = groups[Math.min(active, groups.length - 1)];
 
   return (
-    <section id="skills" className="relative overflow-hidden py-28 md:py-40">
+    <section id="skills" className="relative overflow-hidden py-16 md:py-32">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHeading
           index="06"
@@ -56,145 +58,149 @@ export function Skills({
               A toolkit in <span className="text-gradient">stable orbit.</span>
             </>
           }
-          intro="Each ring is a discipline, orbiting a GPU die that computes as you watch. Hover a world to read it, click the core to switch between tensor, SIMT and big-data execution, and tilt the system with your cursor."
+          intro="Choose a discipline to explore the tools I use. On a larger screen, each discipline becomes an orbit around an interactive compute core."
         />
 
-        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
-          <Reveal
-            className="relative mx-auto aspect-square w-full max-w-[560px] [perspective:1000px]"
-            onPointerMove={(e) => {
-              const rect = e.currentTarget.getBoundingClientRect();
-              const x = (e.clientX - rect.left) / rect.width - 0.5;
-              const y = (e.clientY - rect.top) / rect.height - 0.5;
-              setTilt({ x: -y * 18, y: x * 18 });
-            }}
-            onPointerLeave={() => setTilt({ x: 0, y: 0 })}
-          >
-            <div
-              className="relative size-full transition-transform duration-300 ease-out [transform-style:preserve-3d]"
-              style={{
-                transform: `rotateX(${tilt.x + 14}deg) rotateY(${tilt.y}deg)`,
+        <div
+          className={cn(
+            "grid items-center gap-12 lg:gap-20",
+            enhanced && "lg:grid-cols-2",
+          )}
+        >
+          {enhanced && (
+            <Reveal
+              className="relative mx-auto aspect-square w-full max-w-[560px] [perspective:1000px]"
+              onPointerMove={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width - 0.5;
+                const y = (e.clientY - rect.top) / rect.height - 0.5;
+                setTilt({ x: -y * 18, y: x * 18 });
               }}
+              onPointerLeave={() => setTilt({ x: 0, y: 0 })}
             >
-              <div className="grid-fade absolute inset-[-10%]" />
-              <AsteroidBelt inner={29.5} outer={33.5} />
-              <Comet />
-              {groups.map((group, i) => {
-                const size =
-                  34 + (66 / Math.max(groups.length, 1)) * (i + 1) - 4;
-                const duration = 50 + i * 22;
-                const isActive = i === active;
-                return (
-                  <div
-                    key={group.category}
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-                    style={{
-                      width: `${size}%`,
-                      height: `${size}%`,
-                      containerType: "size",
-                    }}
-                  >
+              <div
+                className="relative size-full transition-transform duration-300 ease-out [transform-style:preserve-3d]"
+                style={{
+                  transform: `rotateX(${tilt.x + 14}deg) rotateY(${tilt.y}deg)`,
+                }}
+              >
+                <div className="grid-fade absolute inset-[-10%]" />
+                <AsteroidBelt inner={29.5} outer={33.5} />
+                <Comet />
+                {groups.map((group, i) => {
+                  const size =
+                    34 + (66 / Math.max(groups.length, 1)) * (i + 1) - 4;
+                  const duration = 50 + i * 22;
+                  const isActive = i === active;
+                  return (
                     <div
-                      className={cn(
-                        "absolute inset-0 rounded-full border transition-all duration-700",
-                        isActive ? "border-solid" : "border-dashed",
-                      )}
+                      key={group.category}
+                      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
                       style={{
-                        borderColor: isActive
-                          ? `${group.color}66`
-                          : "rgb(148 163 255 / 0.2)",
-                        boxShadow: isActive
-                          ? `0 0 40px -8px ${group.color}55, inset 0 0 40px -12px ${group.color}33`
-                          : undefined,
+                        width: `${size}%`,
+                        height: `${size}%`,
+                        containerType: "size",
                       }}
-                    />
-                    <div
-                      className={cn(
-                        "absolute inset-0",
-                        i % 2 ? "animate-orbit-reverse" : "animate-orbit",
-                      )}
-                      style={{ ["--orbit-duration" as string]: `${duration}s` }}
                     >
-                      {group.names.map((name, j) => {
-                        const angle = (j / group.names.length) * 360 + i * 23;
-                        const lit = hovered === name || isActive;
-                        return (
-                          <div
-                            key={name}
-                            className="absolute top-1/2 left-1/2 size-0"
-                            style={{
-                              transform: `rotate(${angle}deg) translateX(50cqw)`,
-                            }}
-                          >
-                            <button
-                              type="button"
-                              onMouseEnter={() => setHovered(name)}
-                              onMouseLeave={() => setHovered(null)}
-                              onFocus={() => setHovered(name)}
-                              onBlur={() => setHovered(null)}
-                              onClick={() => setActive(i)}
-                              className="group absolute -translate-x-1/2 -translate-y-1/2"
+                      <div
+                        className={cn(
+                          "absolute inset-0 rounded-full border transition-all duration-700",
+                          isActive ? "border-solid" : "border-dashed",
+                        )}
+                        style={{
+                          borderColor: isActive
+                            ? `${group.color}66`
+                            : "rgb(148 163 255 / 0.2)",
+                          boxShadow: isActive
+                            ? `0 0 40px -8px ${group.color}55, inset 0 0 40px -12px ${group.color}33`
+                            : undefined,
+                        }}
+                      />
+                      <div
+                        className={cn(
+                          "absolute inset-0",
+                          i % 2 ? "animate-orbit-reverse" : "animate-orbit",
+                        )}
+                        style={{
+                          ["--orbit-duration" as string]: `${duration}s`,
+                        }}
+                      >
+                        {group.names.map((name, j) => {
+                          const angle = (j / group.names.length) * 360 + i * 23;
+                          const lit = hovered === name || isActive;
+                          return (
+                            <div
+                              key={name}
+                              className="absolute top-1/2 left-1/2 size-0"
                               style={{
-                                transform: `translate(-50%, -50%) rotate(${-angle}deg)`,
+                                transform: `rotate(${angle}deg) translateX(50cqw)`,
                               }}
-                              aria-label={`${name} (${group.category})`}
                             >
-                              <span
-                                className={cn(
-                                  "relative block",
-                                  i % 2
-                                    ? "animate-orbit"
-                                    : "animate-orbit-reverse",
-                                )}
+                              <button
+                                type="button"
+                                onMouseEnter={() => setHovered(name)}
+                                onMouseLeave={() => setHovered(null)}
+                                onFocus={() => setHovered(name)}
+                                onBlur={() => setHovered(null)}
+                                onClick={() => setActive(i)}
+                                className="group absolute -translate-x-1/2 -translate-y-1/2"
+                                style={{
+                                  transform: `translate(-50%, -50%) rotate(${-angle}deg)`,
+                                }}
+                                aria-label={`${name} (${group.category})`}
                               >
                                 <span
                                   className={cn(
-                                    "block rounded-full transition-all duration-500",
-                                    lit ? "size-3" : "size-2",
-                                  )}
-                                  style={{
-                                    background: group.color,
-                                    boxShadow: lit
-                                      ? `0 0 16px 4px ${group.color}99`
-                                      : `0 0 8px 1px ${group.color}55`,
-                                  }}
-                                />
-                                <span
-                                  className={cn(
-                                    "pointer-events-none absolute top-full left-1/2 mt-2 -translate-x-1/2 rounded-md bg-void/90 px-2 py-1 font-mono text-[0.65rem] whitespace-nowrap text-ink ring-1 ring-line transition-opacity",
-                                    hovered === name
-                                      ? "opacity-100"
-                                      : "opacity-0",
+                                    "relative block",
+                                    i % 2
+                                      ? "animate-orbit"
+                                      : "animate-orbit-reverse",
                                   )}
                                 >
-                                  {name}
+                                  <span
+                                    className={cn(
+                                      "block rounded-full transition-all duration-500",
+                                      lit ? "size-3" : "size-2",
+                                    )}
+                                    style={{
+                                      background: group.color,
+                                      boxShadow: lit
+                                        ? `0 0 16px 4px ${group.color}99`
+                                        : `0 0 8px 1px ${group.color}55`,
+                                    }}
+                                  />
+                                  <span
+                                    className={cn(
+                                      "pointer-events-none absolute top-full left-1/2 mt-2 -translate-x-1/2 rounded-md bg-void/90 px-2 py-1 font-mono text-[0.65rem] whitespace-nowrap text-ink ring-1 ring-line transition-opacity",
+                                      hovered === name
+                                        ? "opacity-100"
+                                        : "opacity-0",
+                                    )}
+                                  >
+                                    {name}
+                                  </span>
                                 </span>
-                              </span>
-                            </button>
-                          </div>
-                        );
-                      })}
+                              </button>
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
 
-              <ComputeCore initials={initials} />
-            </div>
-          </Reveal>
+                <ComputeCore initials={initials} />
+              </div>
+            </Reveal>
+          )}
 
           <div>
-            <div
-              className="flex flex-wrap gap-2"
-              role="tablist"
-              aria-label="Skill categories"
-            >
+            <div className="flex flex-wrap gap-2" aria-label="Skill categories">
               {groups.map((group, i) => (
                 <button
                   key={group.category}
                   type="button"
-                  role="tab"
-                  aria-selected={i === active}
+                  aria-pressed={i === active}
                   onClick={() => setActive(i)}
                   className={cn(
                     "relative rounded-full px-4 py-2 text-sm transition-colors",

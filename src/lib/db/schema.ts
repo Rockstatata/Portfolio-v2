@@ -138,3 +138,19 @@ export type Achievement = typeof achievements.$inferSelect;
 export type Skill = typeof skills.$inferSelect;
 export type FocusArea = typeof focusAreas.$inferSelect;
 export type Message = typeof messages.$inferSelect;
+
+export const posts = pgTable("posts", {
+  id: serial("id").primaryKey(),
+  slug: text("slug").notNull().unique(),
+  title: text("title").notNull(),
+  excerpt: text("excerpt").notNull().default(""),
+  body: text("body").notNull().default(""),
+  coverUrl: text("cover_url").notNull().default(""),
+  tags: text("tags").array().notNull().default([]),
+  status: text("status").notNull().default("draft"),
+  publishedDate: text("published_date").notNull().default(""),
+  featured: boolean("featured").notNull().default(false),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  ...ordering,
+});
+export type Post = typeof posts.$inferSelect;

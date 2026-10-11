@@ -8,10 +8,10 @@ type RevealProps = HTMLMotionProps<"div"> & { delay?: number; y?: number };
 export function Reveal({ delay = 0, y = 28, children, ...rest }: RevealProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y, filter: "blur(6px)" }}
-      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-      viewport={{ once: true, margin: "-10% 0px" }}
-      transition={{ duration: 0.9, delay, ease: [0.16, 1, 0.3, 1] }}
+      initial={{ opacity: 1, y: 0 }}
+      whileInView={{ opacity: 1, y: [Math.min(y, 12), 0] }}
+      viewport={{ once: true, amount: 0.1 }}
+      transition={{ duration: 0.5, delay, ease: [0.16, 1, 0.3, 1] }}
       {...rest}
     >
       {children}

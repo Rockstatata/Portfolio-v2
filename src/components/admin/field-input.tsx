@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { uploadFile } from "@/app/admin/actions";
 import type { Field } from "@/lib/admin/collections";
 import { cn } from "@/lib/utils";
+import { MarkdownEditor } from "./markdown-editor";
 
 function toText(field: Field, value: unknown) {
   if (Array.isArray(value))
@@ -97,7 +98,14 @@ export function FieldInput({
         {field.label}
         {field.required && <span className="text-nova"> *</span>}
       </label>
-      {field.type === "textarea" || field.type === "lines" ? (
+      {field.type === "markdown" ? (
+        <MarkdownEditor
+          id={id}
+          name={field.name}
+          value={text}
+          onChange={setText}
+        />
+      ) : field.type === "textarea" || field.type === "lines" ? (
         <textarea
           id={id}
           name={field.name}
@@ -118,6 +126,7 @@ export function FieldInput({
       ) : (
         <div className="flex gap-2">
           <input
+            type={field.type === "date" ? "date" : "text"}
             id={id}
             name={field.name}
             value={text}

@@ -118,6 +118,7 @@ export function ItemList({
             <Link
               href={`/admin/${collectionKey}/${row.id}`}
               title="Edit"
+              aria-label={`Edit ${row.title || "item"}`}
               className="grid size-9 place-items-center rounded-lg text-dim transition hover:bg-white/5 hover:text-white"
             >
               <Pencil className="size-4" />

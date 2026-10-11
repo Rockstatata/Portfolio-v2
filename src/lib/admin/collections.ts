@@ -7,6 +7,8 @@
 export type FieldType =
   | "text"
   | "textarea"
+  | "markdown"
+  | "date"
   | "url"
   | "image"
   | "tags"
@@ -28,6 +30,7 @@ export type Field = {
 
 export type CollectionKey =
   | "projects"
+  | "posts"
   | "publications"
   | "experiences"
   | "education"
@@ -75,6 +78,62 @@ const visible: Field = {
 };
 
 export const collections: Record<CollectionKey, Collection> = {
+  posts: {
+    key: "posts",
+    label: "Blog & notes",
+    singular: "Post",
+    description:
+      "Write in Markdown, preview your article, then choose Draft or Published. Only published, visible posts appear in the journal.",
+    titleField: "title",
+    subtitleField: "status",
+    fields: [
+      { name: "title", label: "Title", type: "text", required: true },
+      {
+        name: "slug",
+        label: "URL slug",
+        type: "text",
+        required: true,
+        help: "Lowercase words separated by hyphens. Suggested from the title.",
+      },
+      {
+        name: "excerpt",
+        label: "Short introduction",
+        type: "textarea",
+        wide: true,
+      },
+      { name: "coverUrl", label: "Cover image", type: "image", wide: true },
+      {
+        name: "tags",
+        label: "Topics",
+        type: "tags",
+        placeholder: "AI systems, Research, Life",
+      },
+      {
+        name: "publishedDate",
+        label: "Publication date",
+        type: "date",
+        help: "Leave empty to use the date you first publish.",
+      },
+      {
+        name: "body",
+        label: "Article",
+        type: "markdown",
+        wide: true,
+        required: true,
+      },
+      {
+        name: "status",
+        label: "Publication status",
+        type: "select",
+        options: [
+          { value: "draft", label: "Draft" },
+          { value: "published", label: "Published" },
+        ],
+      },
+      { name: "featured", label: "Featured post", type: "boolean" },
+      visible,
+    ],
+  },
   focusAreas: {
     key: "focusAreas",
     label: "Research vectors",

@@ -41,3 +41,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 /.data
+/.next-e2e/
+/.next-diagnosis/
+/test-results/
+/playwright-report/
