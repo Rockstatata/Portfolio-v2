@@ -15,11 +15,19 @@ export function Contact({ profile }: { profile: Profile }) {
     {},
   );
   const [copied, setCopied] = useState(false);
+  const [copyHint, setCopyHint] = useState("");
 
   const copy = async () => {
-    await navigator.clipboard.writeText(profile.email);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1800);
+    try {
+      await navigator.clipboard.writeText(profile.email);
+      setCopied(true);
+      setCopyHint("Email address copied");
+      setTimeout(() => setCopied(false), 1800);
+    } catch {
+      setCopyHint(
+        "Tap the email address to open your mail app, or select it to copy.",
+      );
+    }
   };
 
   return (
@@ -65,6 +73,9 @@ export function Contact({ profile }: { profile: Profile }) {
                   )}
                 </button>
               </div>
+              <p role="status" className="mt-3 text-xs text-dim">
+                {copyHint}
+              </p>
             </div>
           )}
           <div>
@@ -136,6 +147,7 @@ export function Contact({ profile }: { profile: Profile }) {
                       <input
                         name="email"
                         type="email"
+                        maxLength={200}
                         required
                         className="field"
                         placeholder="you@domain.com"
@@ -163,7 +175,9 @@ export function Contact({ profile }: { profile: Profile }) {
                     aria-hidden
                   />
                   {state.error && (
-                    <p className="text-sm text-nova">{state.error}</p>
+                    <p role="alert" className="text-sm text-nova">
+                      {state.error}
+                    </p>
                   )}
                   <button
                     type="submit"

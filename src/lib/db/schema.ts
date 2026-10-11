@@ -124,6 +124,9 @@ export const messages = pgTable("messages", {
   email: text("email").notNull(),
   body: text("body").notNull(),
   read: boolean("read").notNull().default(false),
+  deliveryStatus: text("delivery_status").notNull().default("pending"),
+  deliveryError: text("delivery_error").notNull().default(""),
+  deliveredAt: timestamp("delivered_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
     .notNull(),
@@ -150,7 +153,9 @@ export const posts = pgTable("posts", {
   status: text("status").notNull().default("draft"),
   publishedDate: text("published_date").notNull().default(""),
   featured: boolean("featured").notNull().default(false),
-  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
   ...ordering,
 });
 export type Post = typeof posts.$inferSelect;

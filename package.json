@@ -14,7 +14,11 @@
     "db:seed": "tsx scripts/seed.ts",
     "db:posts": "tsx scripts/migrate-posts.ts",
     "test:e2e": "playwright test",
-    "test:server": "tsx tests/setup.ts && next dev --port 3006"
+    "test:server": "tsx tests/setup.ts && next dev --port 3006",
+    "db:contact": "tsx scripts/migrate-contact.ts",
+    "contact:prepare": "node scripts/prepare-contact-setup.mjs",
+    "contact:check": "tsx scripts/check-contact.ts",
+    "test:relay": "node --test scripts/__tests__/google-contact.test.mjs"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.8",

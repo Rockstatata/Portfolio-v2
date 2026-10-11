@@ -19,11 +19,16 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
     () => false,
   );
 
-  if (!enabled) return <>{children}</>;
   return (
     <ReactLenis
       root
-      options={{ lerp: 0.09, anchors: { offset: -80 }, autoRaf: true }}
+      options={{
+        lerp: 0.09,
+        anchors: enabled ? { offset: -80 } : false,
+        autoRaf: enabled,
+        smoothWheel: enabled,
+        syncTouch: false,
+      }}
     >
       {children}
     </ReactLenis>

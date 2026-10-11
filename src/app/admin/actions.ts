@@ -22,6 +22,8 @@ import { parseFields, parsePairs, slugify } from "@/lib/admin/parse";
 import { tables } from "@/lib/admin/tables";
 import { listGithubRepos } from "@/lib/github";
 import { CONTENT_TAG } from "@/lib/content";
+import { deliverContactMessage } from "@/lib/contact-delivery";
+import { revalidatePath } from "next/cache";
 
 export type FormState = {
   error?: string;
@@ -229,6 +231,30 @@ export async function uploadFile(
 }
 
 /* ─────────────────────────── messages ─────────────────────────── */
+
+export async function retryMessageDelivery(id: number) {
+  await requireAdmin();
+  const [message] = await db()
+    .select()
+    .from(schema.messages)
+    .where(eq(schema.messages.id, id));
+  if (!message) throw new Error("Message not found");
+  if (message.deliveryStatus === "delivered")
+    return {
+      deliveryStatus: message.deliveryStatus,
+      deliveryError: message.deliveryError,
+    };
+  const delivery = await deliverContactMessage(message);
+  await db()
+    .update(schema.messages)
+    .set(delivery)
+    .where(eq(schema.messages.id, id));
+  revalidatePath("/admin/messages");
+  return {
+    deliveryStatus: delivery.deliveryStatus,
+    deliveryError: delivery.deliveryError,
+  };
+}
 
 export async function setMessageRead(id: number, read: boolean) {
   await requireAdmin();

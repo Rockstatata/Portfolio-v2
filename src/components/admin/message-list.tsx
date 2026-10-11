@@ -1,8 +1,12 @@
 "use client";
 
-import { Mail, MailOpen, Reply, Trash2 } from "lucide-react";
+import { Mail, MailOpen, Reply, Trash2, RefreshCw } from "lucide-react";
 import { useState, useTransition } from "react";
-import { deleteMessage, setMessageRead } from "@/app/admin/actions";
+import {
+  deleteMessage,
+  setMessageRead,
+  retryMessageDelivery,
+} from "@/app/admin/actions";
 import { cn } from "@/lib/utils";
 
 type Row = {
@@ -12,11 +16,13 @@ type Row = {
   body: string;
   read: boolean;
   createdAt: string;
+  deliveryStatus: string;
+  deliveryError: string;
 };
 
 export function MessageList({ messages }: { messages: Row[] }) {
   const [rows, setRows] = useState(messages);
-  const [, start] = useTransition();
+  const [pending, start] = useTransition();
 
   if (rows.length === 0) {
     return (
@@ -91,6 +97,60 @@ export function MessageList({ messages }: { messages: Row[] }) {
           <p className="mt-4 text-sm leading-relaxed whitespace-pre-line text-ink/85">
             {m.body}
           </p>
+          <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
+            <div role="status" className="text-xs">
+              <p
+                className={
+                  m.deliveryStatus === "delivered"
+                    ? "text-aurora"
+                    : "text-flare"
+                }
+              >
+                {m.deliveryStatus === "delivered"
+                  ? "Delivered to Google Sheet and email"
+                  : "Delivery needs attention"}
+              </p>
+              {m.deliveryError && (
+                <p className="mt-2 max-w-xl leading-5 text-dim">
+                  {m.deliveryError}
+                </p>
+              )}
+            </div>
+            {m.deliveryStatus !== "delivered" && (
+              <button
+                type="button"
+                disabled={pending}
+                onClick={() =>
+                  start(async () => {
+                    try {
+                      const delivery = await retryMessageDelivery(m.id);
+                      setRows((rows) =>
+                        rows.map((row) =>
+                          row.id === m.id ? { ...row, ...delivery } : row,
+                        ),
+                      );
+                    } catch {
+                      setRows((rows) =>
+                        rows.map((row) =>
+                          row.id === m.id
+                            ? {
+                                ...row,
+                                deliveryError:
+                                  "Retry failed. Your message remains saved; try again shortly.",
+                              }
+                            : row,
+                        ),
+                      );
+                    }
+                  })
+                }
+                className="inline-flex min-h-11 items-center gap-2 rounded-full border border-ion/30 px-4 text-xs text-ion disabled:opacity-50"
+              >
+                <RefreshCw className="size-3.5" />
+                {pending ? "Retrying…" : "Retry delivery"}
+              </button>
+            )}
+          </div>
         </li>
       ))}
     </ul>
