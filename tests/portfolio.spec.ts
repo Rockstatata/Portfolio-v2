@@ -27,8 +27,9 @@ for (const viewport of [
     await expect(
       page.getByText("Current mission", { exact: true }),
     ).toBeVisible();
-    await expect(page.locator("[data-galaxy] canvas")).toHaveCount(1);
-    await expect(page.locator("[data-orbital-core] canvas")).toHaveCount(1);
+    // Next dev compiles these lazy-loaded scenes separately from the page.
+    await expect(page.locator("[data-galaxy] canvas")).toHaveCount(1, { timeout: 20000 });
+    await expect(page.locator("[data-orbital-core] canvas")).toHaveCount(1, { timeout: 20000 });
     await expect(page.locator(".arrival-screen")).toHaveCount(0);
     await page.screenshot({
       path: `.data/mobile-after-${viewport.width}.png`,
@@ -54,13 +55,23 @@ for (const viewport of [
         `${id}: ${JSON.stringify(sizing)}`,
       ).toBeLessThanOrEqual(viewport.width);
     }
-    const warp = page.getByRole("button", { name: "Engage warp", exact: true });
-    await warp.click();
-    await expect(
-      page.getByRole("button", { name: "Exit warp" }),
-    ).toHaveAttribute("aria-pressed", "true");
-    await page.getByRole("button", { name: "Reset orbit" }).click();
-    await expect(warp).toHaveAttribute("aria-pressed", "false");
+    const layers = page.getByRole("group", { name: "Research map layers" });
+    const story = page.locator("#research-map-story");
+    for (const [label, heading, href] of [
+      ["Build", "Software is the foundation.", "#projects"],
+      ["Compute", "Go deeper into the machine.", "#focus"],
+      ["Collaborate", "Intelligence has to work together.", "#research"],
+      ["Explore", "A direction beyond the horizon.", "#about"],
+    ]) {
+      const button = layers.getByRole("button", { name: new RegExp(label) });
+      await button.click();
+      await expect(button).toHaveAttribute("aria-pressed", "true");
+      await expect(layers.locator('[aria-pressed="true"]')).toHaveCount(1);
+      await expect(story.getByRole("heading")).toHaveText(heading);
+      await expect(story.getByRole("link")).toHaveAttribute("href", href);
+    }
+    await page.getByRole("button", { name: "Reset view" }).click();
+    await expect(layers.getByRole("button", { name: /Compute/ })).toHaveAttribute("aria-pressed", "true");
     await expect(
       page
         .locator("#top")
@@ -87,6 +98,7 @@ test("reduced motion and content without JavaScript", async ({ browser }) => {
   const page = await context.newPage();
   await page.goto("/");
   await expect(page.locator("h1")).toBeVisible();
+  await expect(page.locator("#research-map-story")).toContainText("GPU computing");
   await expect(
     page.getByText("Current mission", { exact: true }),
   ).toBeVisible();
@@ -108,6 +120,8 @@ test("scroll entrances repeat and unsupported WebGL stays usable", async ({
   await expect(page.locator(".galaxy-fallback")).toBeVisible();
   await expect(page.locator(".core-fallback")).toBeVisible();
   await expect(page.locator("h1")).toBeVisible();
+  await page.getByRole("button", { name: /03 Collaborate/ }).click();
+  await expect(page.locator("#research-map-story")).toContainText("multi-robot search and rescue");
   const heading = page.locator("#about h2").locator("..");
   const position = await heading.evaluate((element) => ({
     top: element.getBoundingClientRect().top + window.scrollY,

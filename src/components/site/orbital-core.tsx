@@ -2,9 +2,10 @@
 
 import dynamic from "next/dynamic";
 import { useRef, useState } from "react";
-import { RotateCcw, Sparkles } from "lucide-react";
+import { ArrowUpRight, RotateCcw } from "lucide-react";
 import { OrbitalLoader } from "@/components/ui/orbital-loader";
 import type { CorePose } from "@/components/space/orbital-core-scene";
+import { RESEARCH_LAYERS, type ResearchLayer } from "@/components/space/research-map";
 import { SceneBoundary } from "@/components/ui/scene-boundary";
 
 const Scene = dynamic(() => import("@/components/space/orbital-core-scene"), {
@@ -13,24 +14,27 @@ const Scene = dynamic(() => import("@/components/space/orbital-core-scene"), {
 });
 
 export function OrbitalCore() {
-  const [warp, setWarp] = useState(false);
+  const [layer, setLayer] = useState<ResearchLayer>(1);
   const pose = useRef<CorePose>({ yaw: 0, pitch: 0.15 });
   const drag = useRef<{ x: number; yaw: number } | null>(null);
+  const current = RESEARCH_LAYERS[layer];
+  const select = (next: ResearchLayer) => {
+    setLayer(next);
+    window.dispatchEvent(new Event("scene-interaction"));
+  };
   return (
-    <div className="orbital-core relative min-w-0">
-      <div className="core-reticle" aria-hidden="true" />
-      <div className="relative flex items-center justify-between font-mono text-[10px] tracking-[0.2em] text-dim">
-        <span>STELLAR ENGINE / 01</span>
-        <span className="text-ion">
-          {warp ? "WARP ACTIVE" : "STABLE ORBIT"}
-        </span>
+    <figure className="orbital-core relative min-w-0" aria-labelledby="research-map-title">
+      <div className="relative flex items-center justify-between gap-3">
+        <h2 id="research-map-title" className="hud-label text-dim">How my work connects</h2>
+        <span className="font-mono text-[10px] text-dim" aria-hidden="true">0{layer + 1} / 04</span>
       </div>
       <div
-        className="core-viewport relative mx-auto h-[280px] w-full touch-pan-y cursor-grab outline-none active:cursor-grabbing sm:h-[360px]"
+        className="core-viewport relative mx-auto h-[260px] w-full touch-pan-y cursor-grab outline-none active:cursor-grabbing sm:h-[330px]"
         role="group"
-        aria-label="Interactive 3D orbital core. Drag sideways to rotate, or use the arrow keys."
+        aria-label="3D research map. Drag sideways or use left and right arrow keys to rotate. Choose a layer below to explore the story."
         tabIndex={0}
         onPointerDown={(event) => {
+          if (event.pointerType === "mouse" && event.button !== 0) return;
           if (event.pointerType === "mouse" || event.isPrimary) {
             drag.current = { x: event.clientX, yaw: pose.current.yaw };
             event.currentTarget.setPointerCapture(event.pointerId);
@@ -38,17 +42,13 @@ export function OrbitalCore() {
         }}
         onPointerMove={(event) => {
           if (drag.current) {
-            pose.current.yaw =
-              drag.current.yaw + (event.clientX - drag.current.x) * 0.012;
+            pose.current.yaw = drag.current.yaw + (event.clientX - drag.current.x) * 0.012;
             window.dispatchEvent(new Event("scene-interaction"));
           }
         }}
-        onPointerUp={() => {
-          drag.current = null;
-        }}
-        onPointerCancel={() => {
-          drag.current = null;
-        }}
+        onPointerUp={() => { drag.current = null; }}
+        onPointerCancel={() => { drag.current = null; }}
+        onLostPointerCapture={() => { drag.current = null; }}
         onKeyDown={(event) => {
           if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
             event.preventDefault();
@@ -57,40 +57,36 @@ export function OrbitalCore() {
           }
         }}
       >
-        <div
-          className="core-aura absolute inset-4 rounded-full"
-          aria-hidden="true"
-        />
-        <SceneBoundary fallback={<div className="core-fallback" />}>
-          <Scene warp={warp} pose={pose} />
+        <div className="core-aura absolute inset-4 rounded-full" aria-hidden="true" />
+        <SceneBoundary fallback={<div className="core-fallback" aria-hidden="true" />}>
+          <Scene layer={layer} pose={pose} />
         </SceneBoundary>
+        <span className="pointer-events-none absolute inset-x-0 bottom-2 text-center text-[11px]" style={{ color: current.color }}>{current.caption}</span>
       </div>
-      <div className="relative flex flex-wrap items-center justify-center gap-3">
-        <button
-          type="button"
-          aria-pressed={warp}
-          onClick={() => setWarp((value) => !value)}
-          className="glass inline-flex min-h-11 items-center gap-2 rounded-full px-5 text-xs text-ion"
-        >
-          <Sparkles className="size-3.5" />
-          {warp ? "Exit warp" : "Engage warp"}
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            pose.current = { yaw: 0, pitch: 0.15 };
-            setWarp(false);
-            window.dispatchEvent(new Event("scene-interaction"));
-          }}
-          className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line px-4 text-xs text-dim"
-        >
-          <RotateCcw className="size-3.5" />
-          Reset orbit
-        </button>
+      <div className="relative grid grid-cols-4 gap-1 border-b border-line pb-3" role="group" aria-label="Research map layers">
+        {RESEARCH_LAYERS.map((item, index) => (
+          <button key={item.label} type="button" aria-pressed={layer === index} aria-controls="research-map-story"
+            onClick={() => select(index as ResearchLayer)}
+            className="research-layer min-h-11 rounded-lg px-1 text-[11px] transition-colors sm:text-xs"
+            style={{ color: layer === index ? item.color : undefined }}>
+            <span className="mb-1 block font-mono text-[9px] opacity-60">0{index + 1}</span>{item.label}
+          </button>
+        ))}
       </div>
-      <p className="relative mt-4 text-center font-mono text-[10px] tracking-wider text-dim">
-        DRAG TO ROTATE · SCROLL TO EXPLORE
-      </p>
-    </div>
+      <figcaption id="research-map-story" className="relative pt-4" aria-live="polite" aria-atomic="true">
+        <h3 className="font-display text-lg font-medium text-ink">{current.title}</h3>
+        <p className="mt-2 min-h-[7.5rem] text-sm leading-6 text-dim sm:min-h-[6rem]">{current.description}</p>
+        <a href={current.href} className="mt-2 inline-flex min-h-11 items-center gap-2 text-xs text-ink underline decoration-line underline-offset-4 hover:decoration-current">
+          {current.evidence}<ArrowUpRight className="size-3.5" />
+        </a>
+      </figcaption>
+      <div className="relative mt-3 flex items-center justify-between gap-2 border-t border-line pt-2 text-[10px] text-dim">
+        <span>Drag to rotate · choose a layer</span>
+        <button type="button" className="inline-flex min-h-11 items-center gap-1.5 px-2 hover:text-ink" onClick={() => {
+          pose.current = { yaw: 0, pitch: 0.15 };
+          select(1);
+        }}><RotateCcw className="size-3" />Reset view</button>
+      </div>
+    </figure>
   );
 }
