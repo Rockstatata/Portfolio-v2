@@ -25,8 +25,7 @@ export function OrbitalCore() {
   return (
     <figure className="orbital-core relative min-w-0" aria-labelledby="research-map-title">
       <div className="relative flex items-center justify-between gap-3">
-        <h2 id="research-map-title" className="hud-label text-dim">How my work connects</h2>
-        <span className="font-mono text-[10px] text-dim" aria-hidden="true">0{layer + 1} / 04</span>
+        <h2 id="research-map-title" className="text-xs font-medium text-dim">How my work connects</h2>
       </div>
       <div
         className="core-viewport relative mx-auto h-[260px] w-full touch-pan-y cursor-grab outline-none active:cursor-grabbing sm:h-[330px]"
@@ -57,19 +56,17 @@ export function OrbitalCore() {
           }
         }}
       >
-        <div className="core-aura absolute inset-4 rounded-full" aria-hidden="true" />
         <SceneBoundary fallback={<div className="core-fallback" aria-hidden="true" />}>
           <Scene layer={layer} pose={pose} />
         </SceneBoundary>
-        <span className="pointer-events-none absolute inset-x-0 bottom-2 text-center text-[11px]" style={{ color: current.color }}>{current.caption}</span>
+        <span className="pointer-events-none absolute inset-x-0 bottom-2 text-center text-[11px] text-dim">{current.caption}</span>
       </div>
-      <div className="relative grid grid-cols-4 gap-1 border-b border-line pb-3" role="group" aria-label="Research map layers">
+      <div className="relative grid grid-cols-4 gap-1 pb-3" role="group" aria-label="Research map layers">
         {RESEARCH_LAYERS.map((item, index) => (
           <button key={item.label} type="button" aria-pressed={layer === index} aria-controls="research-map-story"
             onClick={() => select(index as ResearchLayer)}
-            className="research-layer min-h-11 rounded-lg px-1 text-[11px] transition-colors sm:text-xs"
-            style={{ color: layer === index ? item.color : undefined }}>
-            <span className="mb-1 block font-mono text-[9px] opacity-60">0{index + 1}</span>{item.label}
+            className="research-layer relative min-h-11 px-1 text-[11px] transition-colors sm:text-xs">
+            {item.label}
           </button>
         ))}
       </div>
@@ -80,7 +77,7 @@ export function OrbitalCore() {
           {current.evidence}<ArrowUpRight className="size-3.5" />
         </a>
       </figcaption>
-      <div className="relative mt-3 flex items-center justify-between gap-2 border-t border-line pt-2 text-[10px] text-dim">
+      <div className="relative mt-3 flex items-center justify-between gap-2 pt-2 text-[10px] text-dim">
         <span>Drag to rotate · choose a layer</span>
         <button type="button" className="inline-flex min-h-11 items-center gap-1.5 px-2 hover:text-ink" onClick={() => {
           pose.current = { yaw: 0, pitch: 0.15 };

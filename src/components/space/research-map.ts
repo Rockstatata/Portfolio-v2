@@ -6,7 +6,6 @@ export const RESEARCH_LAYERS = [
     description: "I started by building software. Turning an idea into a working system still grounds every research question I take on.",
     evidence: "Explore the systems I've built",
     href: "#projects",
-    color: "#e7c79a",
     caption: "Foundation · software engineering",
   },
   {
@@ -15,7 +14,6 @@ export const RESEARCH_LAYERS = [
     description: "My focus moved down the stack: GPU computing, efficient transformers and computer vision. The question is how to make intelligence practical to run.",
     evidence: "Explore my research directions",
     href: "#focus",
-    color: "#67e8f9",
     caption: "Current direction · AI & GPU systems",
   },
   {
@@ -24,7 +22,6 @@ export const RESEARCH_LAYERS = [
     description: "At Kent State's ATR Lab, I contribute to robotics research. Our RO-MAN work connects local models, shared knowledge and human feedback for multi-robot search and rescue.",
     evidence: "Read the research",
     href: "#research",
-    color: "#a7d9b2",
     caption: "Research · human–robot collaboration",
   },
   {
@@ -33,7 +30,6 @@ export const RESEARCH_LAYERS = [
     description: "Graduate research in AI systems is the next step. Longer term, I want to bring that engineering to space technology and exploration.",
     evidence: "More about my journey",
     href: "#about",
-    color: "#c4b5fd",
     caption: "Long-term ambition · space exploration",
   },
 ] as const;

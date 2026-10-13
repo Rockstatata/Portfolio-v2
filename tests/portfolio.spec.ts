@@ -120,7 +120,7 @@ test("scroll entrances repeat and unsupported WebGL stays usable", async ({
   await expect(page.locator(".galaxy-fallback")).toBeVisible();
   await expect(page.locator(".core-fallback")).toBeVisible();
   await expect(page.locator("h1")).toBeVisible();
-  await page.getByRole("button", { name: /03 Collaborate/ }).click();
+  await page.getByRole("button", { name: "Collaborate", exact: true }).click();
   await expect(page.locator("#research-map-story")).toContainText("multi-robot search and rescue");
   const heading = page.locator("#about h2").locator("..");
   const position = await heading.evaluate((element) => ({
