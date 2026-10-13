@@ -578,7 +578,7 @@ html {
 }
 .orbital-core {
   padding: 1.25rem;
-  background: radial-gradient(ellipse at center, #080d25f0 40%, #080d25b3 70%, transparent);
+  text-shadow: 0 1px 2px #03040b, 0 1px 8px #03040b;
 }
 .core-viewport {
   touch-action: pan-y;
