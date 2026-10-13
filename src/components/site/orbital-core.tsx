@@ -23,7 +23,7 @@ export function OrbitalCore() {
     window.dispatchEvent(new Event("scene-interaction"));
   };
   return (
-    <figure className="orbital-core relative min-w-0" aria-labelledby="research-map-title">
+    <figure className="hero-enter [--enter-delay:180ms] orbital-core relative min-w-0" aria-labelledby="research-map-title">
       <div className="relative flex items-center justify-between gap-3">
         <h2 id="research-map-title" className="text-xs font-medium text-dim">How my work connects</h2>
       </div>

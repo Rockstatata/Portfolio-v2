@@ -99,9 +99,9 @@ function buildGalaxy(count: number) {
   return g;
 }
 
-type GalaxyProps = { count: number; reduced: boolean };
+type GalaxyProps = { count: number };
 
-function Galaxy({ count, reduced }: GalaxyProps) {
+function Galaxy({ count }: GalaxyProps) {
   const material = useRef<THREE.ShaderMaterial>(null);
   const { gl } = useThree();
 
@@ -119,7 +119,7 @@ function Galaxy({ count, reduced }: GalaxyProps) {
   useEffect(() => () => geometry.dispose(), [geometry]);
 
   useFrame((_, delta) => {
-    if (material.current && !reduced)
+    if (material.current)
       material.current.uniforms.uTime.value += Math.min(delta, 0.1) * 0.32;
   });
 
@@ -152,12 +152,12 @@ export default function GalaxyScene({
     : (navigator.hardwareConcurrency ?? 4) <= 4
       ? 16000
       : 36000;
-  const { host, active, reduced } = useSceneState();
+  const { host, active } = useSceneState();
 
   return (
     <div ref={host} className="absolute inset-0" data-galaxy="true">
       <Canvas
-        frameloop={!active ? "never" : mobile || reduced ? "demand" : "always"}
+        frameloop={!active ? "never" : mobile ? "demand" : "always"}
         dpr={mobile ? 1 : [1, 1.25]}
         fallback={<div className="galaxy-fallback" />}
         onCreated={() => {
@@ -172,8 +172,8 @@ export default function GalaxyScene({
           powerPreference: "high-performance",
         }}
       >
-        <SceneFrames active={active} reduced={reduced} mobile={mobile} />
-        <GalaxyGroup count={count} progress={progress} reduced={reduced} />
+        <SceneFrames active={active} mobile={mobile} />
+        <GalaxyGroup count={count} progress={progress} />
       </Canvas>
     </div>
   );
@@ -183,11 +183,9 @@ export default function GalaxyScene({
 function GalaxyGroup({
   count,
   progress,
-  reduced,
 }: {
   count: number;
   progress: React.RefObject<number>;
-  reduced: boolean;
 }) {
   const group = useRef<THREE.Group>(null);
   const pointer = useRef({ x: 0, y: 0 });
@@ -201,7 +199,7 @@ function GalaxyGroup({
   }, []);
 
   useFrame(({ camera, size }, delta) => {
-    const p = reduced ? 0 : (progress.current ?? 0);
+    const p = progress.current ?? 0;
     const wide = size.width > 900;
     const k = 1 - Math.pow(0.0015, Math.min(delta, 0.1));
 
@@ -222,7 +220,7 @@ function GalaxyGroup({
 
   return (
     <group ref={group}>
-      <Galaxy count={count} reduced={reduced} />
+      <Galaxy count={count} />
     </group>
   );
 }

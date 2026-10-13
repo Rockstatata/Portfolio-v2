@@ -7,6 +7,8 @@ import { OrbitalLoader } from "@/components/ui/orbital-loader";
 export function Arrival() {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
+    document.documentElement.dataset.portfolioLoading = "true";
+    delete document.documentElement.dataset.portfolioReady;
     let cancelled = false;
     let resolveScene: () => void;
     const scene = new Promise<void>((resolve) => {
@@ -42,7 +44,11 @@ export function Arrival() {
     };
   }, []);
   return (
-    <AnimatePresence>
+    <AnimatePresence onExitComplete={() => {
+      delete document.documentElement.dataset.portfolioLoading;
+      document.documentElement.dataset.portfolioReady = "true";
+      window.dispatchEvent(new Event("portfolio-ready"));
+    }}>
       {loading && (
         <motion.div
           className="arrival-screen pointer-events-none fixed inset-0 z-[90] bg-void"

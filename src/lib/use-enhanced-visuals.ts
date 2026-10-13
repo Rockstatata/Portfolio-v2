@@ -2,7 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 const QUERY =
-  "(min-width: 1024px) and (pointer: fine) and (prefers-reduced-motion: no-preference)";
+  "(min-width: 1024px) and (pointer: fine)";
 function subscribe(update: () => void) {
   const media = window.matchMedia(QUERY);
   media.addEventListener("change", update);

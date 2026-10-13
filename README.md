@@ -84,6 +84,10 @@ On Windows they use Microsoft Edge; install it if it is not available.
 
 ## Source locations
 
+SHS brand assets are in `public/brand`: font-independent SVGs and transparent
+32, 64 and 512px PNGs. Run `npm run brand:export` to regenerate them, including
+the site's favicon and SVG icon.
+
 - `src/content/seed.ts` — initial content compiled from the CV, GitHub and LinkedIn
 - `src/lib/admin/collections.ts` — field definitions; the admin list, form and save action are generated from these
 - `src/components/site/*` — public sections; `src/components/space/*` — galaxy, starfield, planets

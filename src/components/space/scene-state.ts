@@ -2,12 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import { useMotionPreference } from "@/lib/use-motion-preference";
 
 export function useSceneState() {
   const host = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(true);
-  const reduced = useMotionPreference();
   useEffect(() => {
     let intersecting = true;
     const update = () => {
@@ -25,22 +23,20 @@ export function useSceneState() {
       document.removeEventListener("visibilitychange", update);
     };
   }, []);
-  return { host, active, reduced };
+  return { host, active };
 }
 
-/** Schedule phone scenes on the browser's next frame; pause hidden or still scenes. */
+/** Schedule phone scenes on the browser's next frame; pause only hidden scenes. */
 export function SceneFrames({
   active,
-  reduced,
   mobile,
 }: {
   active: boolean;
-  reduced: boolean;
   mobile: boolean;
 }) {
   const invalidate = useThree((state) => state.invalidate);
   useFrame(() => {
-    if (active && mobile && !reduced) invalidate();
+    if (active && mobile) invalidate();
   });
   useEffect(() => {
     const draw = () => invalidate();
@@ -49,6 +45,6 @@ export function SceneFrames({
   }, [invalidate]);
   useEffect(() => {
     invalidate();
-  }, [active, reduced, mobile, invalidate]);
+  }, [active, mobile, invalidate]);
   return null;
 }

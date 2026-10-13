@@ -1,36 +1,20 @@
 "use client";
 
 import { ReactLenis } from "lenis/react";
-import { useSyncExternalStore } from "react";
 
-const QUERY = "(prefers-reduced-motion: reduce), (pointer: coarse)";
-
-function subscribe(onChange: () => void) {
-  const mq = window.matchMedia(QUERY);
-  mq.addEventListener("change", onChange);
-  return () => mq.removeEventListener("change", onChange);
-}
-
-/** Lenis smooth scrolling for mouse and trackpad users; native scroll on touch or reduced motion. */
+/** One continuous scroll clock for wheel, touch inertia and anchor navigation. */
 export function SmoothScroll({ children }: { children: React.ReactNode }) {
-  const enabled = useSyncExternalStore(
-    subscribe,
-    () => !window.matchMedia(QUERY).matches,
-    () => false,
-  );
-
   return (
-    <ReactLenis
-      root
-      options={{
-        lerp: 0.09,
-        // Lenis already reads each section's CSS scroll-margin-top.
-        anchors: enabled,
-        autoRaf: enabled,
-        smoothWheel: enabled,
-        syncTouch: false,
-      }}
-    >
+    <ReactLenis root options={{
+      lerp: 0.085,
+      anchors: true,
+      autoRaf: true,
+      smoothWheel: true,
+      syncTouch: true,
+      syncTouchLerp: 0.085,
+      touchInertiaExponent: 1.6,
+      respectReducedMotion: false,
+    }}>
       {children}
     </ReactLenis>
   );

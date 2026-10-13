@@ -1,51 +1,25 @@
 "use client";
 
-import {
-  motion,
-  useScroll,
-  useSpring,
-  useTransform,
-  type HTMLMotionProps,
-} from "motion/react";
-import { useRef } from "react";
-import { useMotionPreference } from "@/lib/use-motion-preference";
+import { motion, useInView, type HTMLMotionProps } from "motion/react";
+import { useRef, useSyncExternalStore } from "react";
 
 type RevealProps = HTMLMotionProps<"div"> & { delay?: number; y?: number };
+const subscribe = () => () => {};
+const clientSnapshot = () => true;
+const serverSnapshot = () => false;
 
-/** Scroll-linked entrance and exit, without hiding server-rendered content. */
-export function Reveal({
-  delay = 0,
-  y = 28,
-  children,
-  style,
-  ...rest
-}: RevealProps) {
+/** Keep HTML readable, then choreograph real entrances and repeat them on return. */
+export function Reveal({ delay = 0, y = 42, children, style, ...rest }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const reduced = useMotionPreference();
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-  const progress = useSpring(scrollYProgress, { stiffness: 200, damping: 32, mass: 0.4 });
-  const travel = useTransform(
-    progress,
-    [0, 0.18, 0.82, 1],
-    [Math.min(y, 32), 0, 0, -Math.min(y, 32)],
-  );
-  const opacity = useTransform(
-    progress,
-    [0, 0.15, 0.85, 1],
-    [0.6, 1, 1, 0.6],
-  );
+  const hydrated = useSyncExternalStore(subscribe, clientSnapshot, serverSnapshot);
+  const inView = useInView(ref, { margin: "0px 0px -8% 0px", amount: 0.12 });
   return (
     <motion.div
       ref={ref}
-      style={{
-        ...style,
-        y: reduced ? 0 : travel,
-        opacity: reduced ? 1 : opacity,
-      }}
-      transition={{ delay }}
+      initial={false}
+      animate={!hydrated || inView ? { opacity: 1, y: 0 } : { opacity: 0, y }}
+      transition={{ duration: inView ? 0.8 : 0.45, delay: inView ? delay : 0, ease: [0.16, 1, 0.3, 1] }}
+      style={style}
       {...rest}
     >
       {children}

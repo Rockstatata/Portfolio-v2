@@ -21,7 +21,8 @@ for (const viewport of [
     page.on("pageerror", (error) => errors.push(error.message));
     await page.goto("/", { waitUntil: "networkidle" });
     await expect(page.locator("h1")).toBeVisible();
-    expect((await page.locator("h1").boundingBox())!.y).toBeLessThan(
+    // Measure the settled layout after the hero's visible entrance.
+    await expect.poll(async () => (await page.locator("h1").boundingBox())!.y).toBeLessThan(
       Math.max(170, viewport.height * 0.25),
     );
     await expect(
@@ -88,7 +89,7 @@ for (const viewport of [
   });
 }
 
-test("reduced motion and content without JavaScript", async ({ browser }) => {
+test("content remains readable without JavaScript", async ({ browser }) => {
   const context = await browser.newContext({
     viewport: { width: 390, height: 844 },
     reducedMotion: "reduce",

@@ -8,30 +8,24 @@ import type { Profile } from "@/lib/db/schema";
 import { SocialIcon } from "@/components/ui/brand-icons";
 import { OrbitalCore } from "./orbital-core";
 import { SceneBoundary } from "@/components/ui/scene-boundary";
-import { useMotionPreference } from "@/lib/use-motion-preference";
 
 const GalaxyScene = dynamic(() => import("@/components/space/galaxy-scene"), {
   ssr: false,
 });
 function RoleTicker({ roles }: { roles: string[] }) {
   const [index, setIndex] = useState(0);
-  const reduced = useMotionPreference();
   useEffect(() => {
-    if (
-      roles.length < 2 ||
-      reduced
-    )
-      return;
+    if (roles.length < 2) return;
     const id = window.setInterval(
       () => setIndex((i) => (i + 1) % roles.length),
       4200,
     );
     return () => window.clearInterval(id);
-  }, [roles.length, reduced]);
+  }, [roles.length]);
   return (
     <div className="min-h-12 font-mono text-sm leading-6 text-ion sm:min-h-6">
       <span className="text-faint">&gt; </span>
-      {roles[index % Math.max(roles.length, 1)] ?? "AI Systems Researcher"}
+      <span key={index} className="inline-block role-change">{roles[index % Math.max(roles.length, 1)] ?? "AI Systems Researcher"}</span>
       <span aria-hidden className="ml-1 animate-pulse">
         ▍
       </span>
@@ -89,25 +83,25 @@ export function Hero({
       </div>
       <div className="relative mx-auto grid max-w-7xl gap-10 px-5 pt-24 pb-12 sm:px-8 sm:pt-32 lg:min-h-svh lg:grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)] lg:items-center lg:gap-16 lg:pt-36 lg:pb-24">
         <div className="min-w-0">
-          <div className="hud-label mb-5 flex flex-wrap items-center gap-x-4 gap-y-2 !tracking-[0.14em]">
+          <div className="hero-enter [--enter-delay:0ms] hud-label mb-5 flex flex-wrap items-center gap-x-4 gap-y-2 !tracking-[0.14em]">
             <span className="flex items-center gap-2 text-aurora">
               <span className="size-2 rounded-full bg-aurora shadow-[0_0_12px_#34d399]" />
               Systems online
             </span>
             <span>{profile.location}</span>
           </div>
-          <h1 className="hero-name font-display font-semibold tracking-[-0.045em]">
+          <h1 className="hero-enter [--enter-delay:100ms] hero-name font-display font-semibold tracking-[-0.045em]">
             <span className="block">{first}</span>
             <span className="text-gradient block">{rest.join(" ")}</span>
           </h1>
-          <div className="mt-5 max-w-xl space-y-2 sm:mt-7">
+          <div className="hero-enter [--enter-delay:200ms] mt-5 max-w-xl space-y-2 sm:mt-7">
             <RoleTicker roles={profile.roles} />
             <p className="text-sm leading-7 text-pretty text-dim sm:text-lg">
               {profile.headline}
             </p>
           </div>
           {currentRole && (
-            <div className="mission-card mt-6 max-w-xl rounded-2xl border border-ion/20 bg-space/80 p-4 sm:p-5">
+            <div className="hero-enter [--enter-delay:280ms] mission-card mt-6 max-w-xl rounded-2xl border border-ion/20 bg-space/80 p-4 sm:p-5">
               <div className="hud-label mb-2 flex items-center gap-2 !text-[0.6rem] text-ion">
                 <Sparkles className="size-3.5" />
                 Current mission
@@ -115,7 +109,7 @@ export function Hero({
               <p className="text-sm leading-6 text-ink">{currentRole}</p>
             </div>
           )}
-          <div className="mt-6 flex flex-wrap gap-3 sm:mt-8">
+          <div className="hero-enter [--enter-delay:360ms] mt-6 flex flex-wrap gap-3 sm:mt-8">
             <a
               href="#projects"
               className="launch-button group inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-white px-5 text-sm font-medium text-void"
@@ -135,7 +129,7 @@ export function Hero({
               </a>
             )}
           </div>
-          <div className="mt-4 flex flex-wrap items-center gap-1">
+          <div className="hero-enter [--enter-delay:440ms] mt-4 flex flex-wrap items-center gap-1">
             {profile.socials
               .filter((s) => !s.url.startsWith("mailto:"))
               .map((s) => (

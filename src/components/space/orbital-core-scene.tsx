@@ -61,10 +61,9 @@ function buildField() {
   return geometry;
 }
 
-function ResearchField({ layer, pose, reduced }: {
+function ResearchField({ layer, pose }: {
   layer: ResearchLayer;
   pose: React.RefObject<CorePose>;
-  reduced: boolean;
 }) {
   const root = useRef<THREE.Group>(null);
   const surface = useRef<THREE.Mesh>(null);
@@ -76,14 +75,15 @@ function ResearchField({ layer, pose, reduced }: {
 
   useFrame((_, delta) => {
     const step = Math.min(delta, 0.05);
-    const blend = reduced ? 1 : 1 - Math.exp(-6 * step);
-    if (!reduced) elapsed.current += step;
+    const blend = 1 - Math.exp(-6 * step);
+    elapsed.current += step;
     if (root.current) {
-      root.current.rotation.y = THREE.MathUtils.lerp(root.current.rotation.y, pose.current.yaw, blend);
-      root.current.rotation.x = THREE.MathUtils.lerp(root.current.rotation.x, pose.current.pitch, blend);
+      root.current.rotation.y = THREE.MathUtils.lerp(root.current.rotation.y, pose.current.yaw + elapsed.current * 0.24, blend);
+      root.current.rotation.x = THREE.MathUtils.lerp(root.current.rotation.x, pose.current.pitch + Math.sin(elapsed.current * 0.45) * 0.12, blend);
+      root.current.position.y = Math.sin(elapsed.current * 0.7) * 0.09;
     }
     if (surface.current) {
-      surface.current.rotation.z = -0.35 + (reduced ? 0 : Math.sin(elapsed.current * 0.15) * 0.08);
+      surface.current.rotation.z = -0.35 + Math.sin(elapsed.current * 0.4) * 0.14;
       const weights = surface.current.morphTargetInfluences;
       if (weights) {
         for (let i = 0; i < weights.length; i++) weights[i] = THREE.MathUtils.lerp(weights[i], i === layer ? 1 : 0, blend);
@@ -105,20 +105,20 @@ export default function OrbitalCoreScene({ layer, pose }: {
   layer: ResearchLayer;
   pose: React.RefObject<CorePose>;
 }) {
-  const { host, active, reduced } = useSceneState();
+  const { host, active } = useSceneState();
   const [mobile] = useState(() => window.matchMedia("(pointer: coarse), (max-width: 1023px)").matches);
   return (
     <div ref={host} className="absolute inset-0" data-orbital-core="true" aria-hidden="true">
-      <Canvas dpr={mobile ? 1 : [1, 1.5]} frameloop={!active ? "never" : mobile || reduced ? "demand" : "always"}
+      <Canvas dpr={mobile ? 1 : [1, 1.5]} frameloop={!active ? "never" : mobile ? "demand" : "always"}
         camera={{ position: [0, 0, 5.5], fov: 40 }}
         gl={{ alpha: true, antialias: !mobile, powerPreference: "low-power" }} fallback={<div className="core-fallback" />}>
-        <SceneFrames active={active} reduced={reduced} mobile={mobile} />
+        <SceneFrames active={active} mobile={mobile} />
         <ambientLight intensity={0.65} />
         <hemisphereLight args={["#e8eaf6", "#070915", 1.3]} />
         <directionalLight position={[2, 3, 4]} color="#67e8f9" intensity={4} />
         <directionalLight position={[-3, 1, 2]} color="#c084fc" intensity={3} />
         <directionalLight position={[0, -3, -2]} color="#8b5cf6" intensity={3} />
-        <ResearchField layer={layer} pose={pose} reduced={reduced} />
+        <ResearchField layer={layer} pose={pose} />
       </Canvas>
     </div>
   );

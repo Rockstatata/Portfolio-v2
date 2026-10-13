@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { SHSMark } from "@/components/ui/shs-mark";
 
 const LINKS = [
   { id: "about", label: "About" },
@@ -103,11 +104,9 @@ export function Nav({ initials }: { initials: string }) {
           href="/"
           className="group flex shrink-0 items-center gap-2.5 rounded-full py-1 pr-3 pl-1"
           aria-label="Home"
+          title={`${initials} · Home`}
         >
-          <span className="relative grid size-9 place-items-center rounded-full border border-line bg-hull font-display text-xs font-semibold tracking-wider">
-            <span className="absolute inset-0 rounded-full bg-[conic-gradient(from_0deg,transparent,rgb(139_92_246/0.6),transparent_40%)] opacity-0 transition-opacity duration-500 group-hover:animate-orbit group-hover:opacity-100 [--orbit-duration:3s]" />
-            <span className="relative">{initials}</span>
-          </span>
+          <SHSMark className="size-9 text-ink transition-colors duration-300 group-hover:text-ion" />
           <span className="hud-label hidden !text-[0.65rem] sm:inline">
             Mission Control
           </span>

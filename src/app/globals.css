@@ -407,16 +407,6 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-  }
-}
-
 /* ── Compute core (skills centrepiece) ─────────────────────────── */
 @keyframes core-fire {
   0%,
@@ -734,10 +724,22 @@ html {
     padding: 1rem 0.5rem;
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .loader-orbit,
-  .loader-scan span,
-  .scroll-wheel span {
-    animation: none;
-  }
+html[data-portfolio-loading="true"] .hero-enter {
+  opacity: 0;
+  transform: translateY(32px);
 }
+html[data-portfolio-ready="true"] .hero-enter {
+  animation: hero-arrive 950ms var(--ease-warp) var(--enter-delay, 0ms) both;
+}
+@keyframes hero-arrive {
+  from { opacity: 0; transform: translateY(32px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.role-change {
+  animation: chapter-enter 500ms var(--ease-warp) both;
+}
+.launch-button {
+  transition: transform 300ms var(--ease-warp), box-shadow 300ms var(--ease-warp);
+}
+.launch-button:hover { transform: translateY(-3px); }
+.launch-button:active { transform: translateY(0) scale(0.98); }
