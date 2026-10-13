@@ -25,16 +25,15 @@ export function Starfield() {
     const ctx = canvas?.getContext("2d");
     if (!canvas || !ctx) return;
 
-    const reduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let reduced = media.matches;
     const mobile = window.matchMedia("(pointer: coarse), (max-width: 767px)").matches;
     let lastDraw = 0;
     let width = 0;
     let height = 0;
     let stars: Star[] = [];
     const meteors: Meteor[] = [];
-    let frame = 0;
+    let lastScroll = -1;
     let raf = 0;
     let visible = true;
 
@@ -63,24 +62,26 @@ export function Starfield() {
     };
 
     const draw = (time = 0) => {
-      if (!reduced && time - lastDraw < (mobile ? 50 : 32)) {
+      const scroll = window.scrollY;
+      // Idle stars can update slowly; parallax must follow every scroll frame.
+      if (!reduced && scroll === lastScroll && time - lastDraw < (mobile ? 50 : 32)) {
         if (visible) raf = requestAnimationFrame(draw);
         return;
       }
+      const step = Math.min(Math.max(time - lastDraw, 0), 100) / 32;
       lastDraw = time;
-      frame++;
-      const scroll = window.scrollY;
+      lastScroll = scroll;
       ctx.clearRect(0, 0, width, height);
 
       for (const s of stars) {
         const parallax = 0.04 + s.z * 0.22;
-        let y = (s.y - scroll * parallax) % (height * 3);
+        let y = (s.y - (reduced ? 0 : scroll * parallax)) % (height * 3);
         if (y < 0) y += height * 3;
         if (y > height + 4) continue;
 
         const twinkle = reduced
           ? 1
-          : 0.65 + Math.sin(frame * 0.02 + s.tw) * 0.35;
+          : 0.65 + Math.sin(time * 0.0006 + s.tw) * 0.35;
         const alpha = (0.25 + s.z * 0.75) * twinkle;
         ctx.beginPath();
         ctx.fillStyle = `hsla(${s.hue}, 80%, ${82 + s.z * 12}%, ${alpha})`;
@@ -95,7 +96,7 @@ export function Starfield() {
         }
       }
 
-      if (!reduced && !mobile && Math.random() < 0.004 && meteors.length < 2) {
+      if (!reduced && !mobile && Math.random() < 0.004 * step && meteors.length < 2) {
         const fromLeft = Math.random() < 0.5;
         meteors.push({
           x: fromLeft
@@ -110,9 +111,9 @@ export function Starfield() {
 
       for (let i = meteors.length - 1; i >= 0; i--) {
         const m = meteors[i];
-        m.x += m.vx;
-        m.y += m.vy;
-        m.life -= 0.012;
+        m.x += m.vx * step;
+        m.y += m.vy * step;
+        m.life -= 0.012 * step;
         const tail = ctx.createLinearGradient(
           m.x,
           m.y,
@@ -140,14 +141,22 @@ export function Starfield() {
     };
 
     const onResize = () => { resize(); if (reduced) draw(); };
+    const onPreference = () => {
+      reduced = media.matches;
+      meteors.length = 0;
+      cancelAnimationFrame(raf);
+      if (visible) raf = requestAnimationFrame(draw);
+    };
     resize();
     raf = requestAnimationFrame(draw);
     window.addEventListener("resize", onResize);
     document.addEventListener("visibilitychange", onVisibility);
+    media.addEventListener("change", onPreference);
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", onResize);
       document.removeEventListener("visibilitychange", onVisibility);
+      media.removeEventListener("change", onPreference);
     };
   }, []);
 

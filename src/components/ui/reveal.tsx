@@ -2,12 +2,13 @@
 
 import {
   motion,
-  useReducedMotion,
   useScroll,
+  useSpring,
   useTransform,
   type HTMLMotionProps,
 } from "motion/react";
 import { useRef } from "react";
+import { useMotionPreference } from "@/lib/use-motion-preference";
 
 type RevealProps = HTMLMotionProps<"div"> & { delay?: number; y?: number };
 
@@ -20,25 +21,21 @@ export function Reveal({
   ...rest
 }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const reduced = useReducedMotion();
+  const reduced = useMotionPreference();
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
   });
+  const progress = useSpring(scrollYProgress, { stiffness: 200, damping: 32, mass: 0.4 });
   const travel = useTransform(
-    scrollYProgress,
+    progress,
     [0, 0.18, 0.82, 1],
     [Math.min(y, 32), 0, 0, -Math.min(y, 32)],
   );
   const opacity = useTransform(
-    scrollYProgress,
+    progress,
     [0, 0.15, 0.85, 1],
     [0.6, 1, 1, 0.6],
-  );
-  const scale = useTransform(
-    scrollYProgress,
-    [0, 0.18, 0.82, 1],
-    [0.98, 1, 1, 0.98],
   );
   return (
     <motion.div
@@ -47,7 +44,6 @@ export function Reveal({
         ...style,
         y: reduced ? 0 : travel,
         opacity: reduced ? 1 : opacity,
-        scale: reduced ? 1 : scale,
       }}
       transition={{ delay }}
       {...rest}

@@ -1,18 +1,17 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
+import { useMotionPreference } from "@/lib/use-motion-preference";
 
 export function useSceneState() {
   const host = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(true);
-  const [reduced, setReduced] = useState(false);
+  const reduced = useMotionPreference();
   useEffect(() => {
     let intersecting = true;
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     const update = () => {
       setActive(intersecting && document.visibilityState === "visible");
-      setReduced(media.matches);
     };
     const observer = new IntersectionObserver(([entry]) => {
       intersecting = entry.isIntersecting;
@@ -20,18 +19,16 @@ export function useSceneState() {
     });
     if (host.current) observer.observe(host.current);
     document.addEventListener("visibilitychange", update);
-    media.addEventListener("change", update);
     update();
     return () => {
       observer.disconnect();
       document.removeEventListener("visibilitychange", update);
-      media.removeEventListener("change", update);
     };
   }, []);
   return { host, active, reduced };
 }
 
-/** Demand rendering keeps phone scenes at 30fps and reduced-motion scenes still. */
+/** Schedule phone scenes on the browser's next frame; pause hidden or still scenes. */
 export function SceneFrames({
   active,
   reduced,
@@ -42,6 +39,9 @@ export function SceneFrames({
   mobile: boolean;
 }) {
   const invalidate = useThree((state) => state.invalidate);
+  useFrame(() => {
+    if (active && mobile && !reduced) invalidate();
+  });
   useEffect(() => {
     const draw = () => invalidate();
     window.addEventListener("scene-interaction", draw);
@@ -49,9 +49,6 @@ export function SceneFrames({
   }, [invalidate]);
   useEffect(() => {
     invalidate();
-    if (!active || reduced || !mobile) return;
-    const timer = window.setInterval(invalidate, 1000 / 30);
-    return () => window.clearInterval(timer);
   }, [active, reduced, mobile, invalidate]);
   return null;
 }

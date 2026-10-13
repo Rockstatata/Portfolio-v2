@@ -8,16 +8,18 @@ import type { Profile } from "@/lib/db/schema";
 import { SocialIcon } from "@/components/ui/brand-icons";
 import { OrbitalCore } from "./orbital-core";
 import { SceneBoundary } from "@/components/ui/scene-boundary";
+import { useMotionPreference } from "@/lib/use-motion-preference";
 
 const GalaxyScene = dynamic(() => import("@/components/space/galaxy-scene"), {
   ssr: false,
 });
 function RoleTicker({ roles }: { roles: string[] }) {
   const [index, setIndex] = useState(0);
+  const reduced = useMotionPreference();
   useEffect(() => {
     if (
       roles.length < 2 ||
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      reduced
     )
       return;
     const id = window.setInterval(
@@ -25,7 +27,7 @@ function RoleTicker({ roles }: { roles: string[] }) {
       4200,
     );
     return () => window.clearInterval(id);
-  }, [roles.length]);
+  }, [roles.length, reduced]);
   return (
     <div className="min-h-12 font-mono text-sm leading-6 text-ion sm:min-h-6">
       <span className="text-faint">&gt; </span>

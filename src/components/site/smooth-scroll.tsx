@@ -24,7 +24,8 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
       root
       options={{
         lerp: 0.09,
-        anchors: enabled ? { offset: -80 } : false,
+        // Lenis already reads each section's CSS scroll-margin-top.
+        anchors: enabled,
         autoRaf: enabled,
         smoothWheel: enabled,
         syncTouch: false,

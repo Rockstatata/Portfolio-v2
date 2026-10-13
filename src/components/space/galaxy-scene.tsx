@@ -148,7 +148,7 @@ export default function GalaxyScene({
     () => window.matchMedia("(pointer: coarse), (max-width: 1023px)").matches,
   );
   const count = mobile
-    ? 10000
+    ? 6000
     : (navigator.hardwareConcurrency ?? 4) <= 4
       ? 16000
       : 36000;

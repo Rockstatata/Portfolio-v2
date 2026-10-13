@@ -16,7 +16,7 @@ const Scene = dynamic(() => import("@/components/space/orbital-core-scene"), {
 export function OrbitalCore() {
   const [layer, setLayer] = useState<ResearchLayer>(1);
   const pose = useRef<CorePose>({ yaw: 0, pitch: 0.15 });
-  const drag = useRef<{ x: number; yaw: number } | null>(null);
+  const drag = useRef<{ x: number; y: number; yaw: number; active: boolean } | null>(null);
   const current = RESEARCH_LAYERS[layer];
   const select = (next: ResearchLayer) => {
     setLayer(next);
@@ -35,13 +35,25 @@ export function OrbitalCore() {
         onPointerDown={(event) => {
           if (event.pointerType === "mouse" && event.button !== 0) return;
           if (event.pointerType === "mouse" || event.isPrimary) {
-            drag.current = { x: event.clientX, yaw: pose.current.yaw };
-            event.currentTarget.setPointerCapture(event.pointerId);
+            const active = event.pointerType === "mouse";
+            drag.current = { x: event.clientX, y: event.clientY, yaw: pose.current.yaw, active };
+            if (active) event.currentTarget.setPointerCapture(event.pointerId);
           }
         }}
         onPointerMove={(event) => {
           if (drag.current) {
-            pose.current.yaw = drag.current.yaw + (event.clientX - drag.current.x) * 0.012;
+            const dx = event.clientX - drag.current.x;
+            const dy = event.clientY - drag.current.y;
+            if (!drag.current.active) {
+              if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 6) {
+                drag.current = null;
+                return;
+              }
+              if (Math.abs(dx) < 6) return;
+              drag.current.active = true;
+              event.currentTarget.setPointerCapture(event.pointerId);
+            }
+            pose.current.yaw = drag.current.yaw + dx * 0.008;
             window.dispatchEvent(new Event("scene-interaction"));
           }
         }}
@@ -71,11 +83,13 @@ export function OrbitalCore() {
         ))}
       </div>
       <figcaption id="research-map-story" className="relative pt-4" aria-live="polite" aria-atomic="true">
+        <div key={layer} className="research-chapter">
         <h3 className="font-display text-lg font-medium text-ink">{current.title}</h3>
         <p className="mt-2 min-h-[7.5rem] text-sm leading-6 text-dim sm:min-h-[6rem]">{current.description}</p>
         <a href={current.href} className="mt-2 inline-flex min-h-11 items-center gap-2 text-xs text-ink underline decoration-line underline-offset-4 hover:decoration-current">
           {current.evidence}<ArrowUpRight className="size-3.5" />
         </a>
+        </div>
       </figcaption>
       <div className="relative mt-3 flex items-center justify-between gap-2 pt-2 text-[10px] text-dim">
         <span>Drag to rotate · choose a layer</span>

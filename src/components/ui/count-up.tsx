@@ -2,10 +2,12 @@
 
 import { animate, useInView } from "motion/react";
 import { useEffect, useRef } from "react";
+import { useMotionPreference } from "@/lib/use-motion-preference";
 
 /** Animates the numeric part of values like "3.78", "40+" or "5". */
 export function CountUp({ value }: { value: string }) {
   const ref = useRef<HTMLSpanElement>(null);
+  const reduced = useMotionPreference();
   const inView = useInView(ref, { once: true, margin: "-10% 0px" });
   const match = value.match(/^([^\d]*)(\d+(?:\.\d+)?)(.*)$/);
 
@@ -14,6 +16,10 @@ export function CountUp({ value }: { value: string }) {
     const [, prefix, num, suffix] = match;
     const decimals = num.includes(".") ? num.split(".")[1].length : 0;
     const el = ref.current;
+    if (reduced) {
+      el.textContent = value;
+      return;
+    }
     const controls = animate(0, Number(num), {
       duration: 1.8,
       ease: [0.16, 1, 0.3, 1],
@@ -23,7 +29,7 @@ export function CountUp({ value }: { value: string }) {
     });
     return () => controls.stop();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inView, value]);
+  }, [inView, value, reduced]);
 
   return <span ref={ref}>{value}</span>;
 }
